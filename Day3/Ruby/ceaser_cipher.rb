@@ -13,5 +13,5 @@ def ceaser_cipher(string, shift)
   ciphered_string
 end  
 
-puts ceaser_cipher("Hello, World!", 3) # "khoor, zruog!"
-puts ceaser_cipher("Ruby is fun!", 5) # "wzgd nx k
+puts ceaser_cipher("Hello, World!", 3) 
+puts ceaser_cipher("Ruby is fun!", 5) 
