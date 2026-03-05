@@ -1,5 +1,7 @@
 export default function Navbar() {
   return (
-    <div>Navbar</div>
+    <div className="bg-gray-800 text-white p-4  text-2xl">
+        Explore Places
+    </div>
   )
 }
