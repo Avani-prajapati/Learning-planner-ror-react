@@ -1,4 +1,6 @@
-require "colorize"
+# frozen_string_literal: true
+
+require 'colorize'
 
 module Greeter
   class Greeting
@@ -9,5 +11,5 @@ module Greeter
     def say_bye(name)
       puts "Bye, #{name}!".colorize(:red)
     end
-  end  
-end  
+  end
+end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require_relative 'lib/greeter'
 
 greeter = Greeter::Greeting.new
 
-puts "Enter your name:"
+puts 'Enter your name:'
 name = gets.chomp
 
 greeter.say_hi(name)
