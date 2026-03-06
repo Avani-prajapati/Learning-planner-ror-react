@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AddSweet({
   setSweets,
@@ -16,12 +17,12 @@ export default function AddSweet({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if(!newSweet.name || !newSweet.price || !newSweet.description) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
 
     if(newSweet.price <= 0) {
-      alert("Price must be greater than 0");
+      toast.error("Price must be greater than 0");
       return;
     }
 
@@ -31,6 +32,7 @@ export default function AddSweet({
       price: 0,
       description: "",
     });
+    toast.success("Sweet added successfully!");
     setIsFormOpen(false);
   }
 
