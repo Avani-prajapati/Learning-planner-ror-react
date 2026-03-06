@@ -1,0 +1,62 @@
+ [
+  {
+    "id": 1,
+    "name": "Gulab Jamun",
+    "price": 10,
+    "description": "Soft milk-solid balls soaked in sweet sugar syrup."
+  },
+  {
+    "id": 2,
+    "name": "Rasgulla",
+    "price": 12,
+    "description": "Spongy cottage cheese balls dipped in light sugar syrup."
+  },
+  {
+    "id": 3,
+    "name": "Kaju Katli",
+    "price": 20,
+    "description": "Rich cashew fudge with a smooth and delicate texture."
+  },
+  {
+    "id": 4,
+    "name": "Jalebi",
+    "price": 8,
+    "description": "Crispy spiral-shaped sweet soaked in saffron syrup."
+  },
+  {
+    "id": 5,
+    "name": "Ladoo",
+    "price": 9,
+    "description": "Traditional sweet balls made with gram flour and ghee."
+  },
+  {
+    "id": 6,
+    "name": "Rasmalai",
+    "price": 18,
+    "description": "Soft paneer patties soaked in creamy saffron milk."
+  },
+  {
+    "id": 7,
+    "name": "Barfi",
+    "price": 14,
+    "description": "Dense milk-based sweet flavored with cardamom."
+  },
+  {
+    "id": 8,
+    "name": "Peda",
+    "price": 11,
+    "description": "Soft and rich milk fudge flavored with cardamom."
+  },
+  {
+    "id": 9,
+    "name": "Mysore Pak",
+    "price": 16,
+    "description": "Traditional South Indian sweet made with ghee and gram flour."
+  },
+  {
+    "id": 10,
+    "name": "Soan Papdi",
+    "price": 13,
+    "description": "Flaky cube-shaped sweet with a light and crispy texture."
+  }
+]
