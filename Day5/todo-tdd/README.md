@@ -1,73 +1,178 @@
-# React + TypeScript + Vite
+# React Jest Testing Setup (Vite + TypeScript)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project demonstrates how to **set up Jest and React Testing Library in a React application built with Vite and TypeScript**.
+It also includes a simple **Todo App** used to practice **component testing and Test Driven Development (TDD)**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# 🚀 Tech Stack
 
-## React Compiler
+* React
+* Vite
+* TypeScript
+* Jest
+* React Testing Library
+* TailwindCSS
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+# 📦 Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Clone the repository:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <your-repo-link>
+cd todo-tdd
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+---
+
+# ⚙️ Setup Jest
+
+Install testing dependencies:
+
+```bash
+npm install -D jest ts-jest @types/jest jest-environment-jsdom
+npm install -D @testing-library/react @testing-library/dom
+npm install -D @testing-library/jest-dom @testing-library/user-event
+npm install -D identity-obj-proxy
+```
+
+---
+
+# 🧩 Configure Jest
+
+Create a file in the root directory:
+
+```
+jest.config.ts
+```
+
+Add the following configuration:
+
+```ts
+export default {
+  preset: "ts-jest",
+  testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
+  moduleNameMapper: {
+    "\\.(css|less|scss)$": "identity-obj-proxy"
+  }
+};
+```
+
+This configuration:
+
+* Enables **TypeScript support**
+* Uses **jsdom browser environment**
+* Loads Testing Library setup
+* Prevents errors when importing CSS files
+
+---
+
+# 🧪 Setup Testing Library
+
+Create a setup file:
+
+```
+src/setupTests.ts
+```
+
+Add:
+
+```ts
+import "@testing-library/jest-dom";
+```
+
+This enables useful DOM matchers like:
+
+```
+toBeInTheDocument()
+toHaveTextContent()
+toBeVisible()
+```
+
+---
+
+# ⚙️ Update TypeScript Configuration
+
+Jest requires small changes in **tsconfig.json**.
+
+Open:
+
+```
+tsconfig.json
+```
+
+Update or add the following inside `compilerOptions`:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["jest", "@testing-library/jest-dom"],
+    "jsx": "react-jsx"
+  }
+}
+```
+
+### Why these changes are required
+
+`types`
+
+Allows TypeScript to recognize Jest functions:
+
+```
+test()
+expect()
+describe()
+```
+
+and Testing Library matchers:
+
+```
+toBeInTheDocument()
+```
+
+`jsx: react-jsx`
+
+Ensures JSX works correctly while running tests.
+
+---
+
+# ▶️ Running Tests
+
+Run tests using:
+
+```bash
+npm test
+```
+
+
+
+# 📚 What This Project Covers
+
+* Setting up **Jest in a Vite + TypeScript project**
+* Using **React Testing Library**
+* Writing **component tests**
+* Testing **user interactions**
+* Practicing **Test Driven Development (TDD)**
+
+---
+
+
+# 🎯 Learning Goal
+
+The goal of this project is to understand:
+
+* How to configure **Jest in a React project**
+* How to test **React components**
+* How to test **user behavior instead of implementation details**
+* How to follow **Test Driven Development (TDD)**
+
+
