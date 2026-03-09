@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import ProfileCard from "./components/ProfileCard";
-import Demo from "./components/Demo";
 
 type Developer = {
   name: string;
