@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import ProfileCard from "./components/ProfileCard";
+import Demo from "./components/Demo";
 
 type Developer = {
   name: string;
@@ -29,8 +30,16 @@ function App() {
 
   return (
     <Box>
+    
       <Navbar addDeveloper={addDeveloper} />
-
+      {/* <Box p={8}>
+        <SimpleGrid columns={3} gap={6}>
+          {developers.map((dev, index) => (
+           <Demo/>
+          ))}
+        </SimpleGrid>
+      </Box> */}
+     
       <Box p={8}>
         <SimpleGrid columns={3} gap={6}>
           {developers.map((dev, index) => (
