@@ -1,24 +1,119 @@
-# README
+# Blog API (Ruby on Rails)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Overview
 
-Things you may want to cover:
+This project is a **Ruby on Rails API application** built as part of a learning exercise. It demonstrates building a RESTful backend, working with background jobs, and writing automated tests using RSpec.
 
-* Ruby version
+---
 
-* System dependencies
+## Prerequisites
 
-* Configuration
+Ensure the following tools are installed:
 
-* Database creation
+* Ruby (3.x recommended)
+* Rails
+* Bundler
+* SQLite or PostgreSQL
+* Git
 
-* Database initialization
+Check installed versions:
 
-* How to run the test suite
+```bash
+ruby -v
+rails -v
+bundle -v
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+---
 
-* Deployment instructions
+## Setup Instructions
 
-* ...
+### 1. Clone the Repository
+
+```bash
+git clone <your-repository-url>
+cd blog_api
+```
+
+---
+
+### 2. Install Dependencies
+
+```bash
+bundle install
+```
+
+---
+
+### 3. Setup Database
+
+Create the database:
+
+```bash
+rails db:create
+```
+
+Run migrations:
+
+```bash
+rails db:migrate
+```
+
+Prepare the test database for RSpec:
+
+```bash
+rails db:test:prepare
+```
+
+---
+
+### 4. Start the Rails Server
+
+```bash
+rails server
+```
+
+The application will start at:
+
+```
+http://localhost:3000
+```
+
+---
+
+## Running Tests
+
+To run automated tests:
+
+```bash
+bundle exec rspec
+```
+
+---
+
+## Background Jobs
+
+The project includes a sample **ActiveJob background job** implementation to demonstrate asynchronous task handling.
+
+---
+
+## Tech Stack
+
+* Ruby
+* Ruby on Rails (API mode)
+* ActiveJob
+* RSpec
+* SQLite / PostgreSQL
+
+---
+
+## Notes
+
+If you encounter a **PendingMigrationError** while running tests, ensure the test database migrations are applied:
+
+```bash
+rails db:test:prepare
+```
+
+---
+
