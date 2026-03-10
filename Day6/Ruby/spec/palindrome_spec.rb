@@ -43,9 +43,13 @@ RSpec.describe Palindrome do
       expect(Palindrome.palindrome?("સરર")).to be false
     end
 
+    it "supports gujarati with 'anusvar' palindrome" do
+     expect(Palindrome.palindrome?("રંગરં")).to be true
+    end
+
     # Marathi
     it "supports Marathi palindrome" do
-      expect(Palindrome.palindrome?("निलयलिन")).to be true
+     expect(Palindrome.palindrome?("मलयलम")).to be true
     end
 
     it "detects Marathi non palindrome" do
@@ -53,8 +57,7 @@ RSpec.describe Palindrome do
     end
 
      # Malayalam
-    it "detects malayalam palindrome" do
-     expect(Palindrome.palindrome?("തൂത")).to be true
+    it "supports malayalam palindrome" do
      expect(Palindrome.palindrome?("നടന")).to be true
     end
 
@@ -63,7 +66,7 @@ RSpec.describe Palindrome do
     end
 
      # Tamil
-    it "detects tamil palindrome" do
+    it "supports tamil palindrome" do
       expect(Palindrome.palindrome?("கலக")).to be true
     end
 
@@ -72,7 +75,7 @@ RSpec.describe Palindrome do
     end
 
     # Hindi
-    it "detects hindi palindrome" do
+    it "supports hindi palindrome" do
       expect(Palindrome.palindrome?("नयन")).to be true
     end
 
@@ -81,8 +84,9 @@ RSpec.describe Palindrome do
     end
 
     # Hindi and gujarati
-    it "detects hindi and gujarati palindrome" do
+    it "detects hindi and gujarati non palindrome" do
       expect(Palindrome.palindrome?("नयન")).to be false
     end
+
   end
 end

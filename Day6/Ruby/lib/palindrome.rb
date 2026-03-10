@@ -1,7 +1,8 @@
 class Palindrome
   def self.palindrome?(str)
     clean = normalize_string(str)
-    clean == clean.reverse
+    chars = clean.scan(/\X/)   # split by grapheme clusters
+    chars == chars.reverse
   end
 
   def self.normalize_string(str)
