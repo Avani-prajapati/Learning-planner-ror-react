@@ -12,6 +12,8 @@ class PostsController < ApplicationController
 
 def create
   post = Post.create!(post_params)
+    SendPostEmailJob.perform_later(post.id)
+
   render json: post, status: :created
 end
 
