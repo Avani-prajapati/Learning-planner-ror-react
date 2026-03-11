@@ -4,11 +4,22 @@ module Mutations
     argument :body, String, required: true
 
     field :post, Types::PostType, null: true
+    field :errors, [String], null: false
 
     def resolve(title:, body:)
-      post = Post.create!(title: title, body: body)
+      post = Post.new(title: title, body: body)
 
-      { post: post }
+      if post.save
+        {
+          post: post,
+          errors: []
+        }
+      else
+        {
+          post: nil,
+          errors: post.errors.full_messages
+        }
+      end
     end
   end
 end
