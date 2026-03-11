@@ -22,11 +22,6 @@ module Types
     # They will be entry points for queries on your schema.
 
     
-    field :posts, [Types::PostType], null: false
-
-    def posts
-      Post.all
-    end
 
     field :post, Types::PostType, null: true do
       argument :id, ID, required: true
@@ -35,5 +30,7 @@ module Types
     def post(id:)
       Post.find(id)
     end
+
+    field :posts, resolver: Resolvers::PostsResolver
   end
 end
