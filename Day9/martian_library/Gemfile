@@ -50,3 +50,5 @@ group :development, :test do
 end
 
 gem "graphql", "~> 2.5"
+
+gem "rspec-rails", "~> 8.0"
