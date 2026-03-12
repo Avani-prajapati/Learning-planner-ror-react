@@ -7,3 +7,22 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+user = User.create!(
+  first_name: "Elon",
+  last_name: "Musk",
+  email: "elon@mars.com"
+)
+
+Item.create!(
+  title: "Martian Book",
+  description: "Book about Mars",
+  image_url: "https://example.com/book.jpg",
+  user: user
+)
+
+Item.create!(
+  title: "Mars Rover",
+  description: "Exploration rover",
+  image_url: "https://example.com/rover.jpg",
+  user: user
+)
