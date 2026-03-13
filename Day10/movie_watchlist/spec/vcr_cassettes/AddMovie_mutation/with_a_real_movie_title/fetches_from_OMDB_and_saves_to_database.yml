@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://www.omdbapi.com/?apikey=<OMDB_API_KEY>&t=Inception
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 13 Mar 2026 11:39:10 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - public, max-age=3600
+      Expires:
+      - Fri, 13 Mar 2026 12:39:10 GMT
+      Last-Modified:
+      - Fri, 13 Mar 2026 11:39:10 GMT
+      Vary:
+      - "*"
+      Server:
+      - cloudflare
+      X-Aspnet-Version:
+      - 4.0.30319
+      Access-Control-Allow-Origin:
+      - "*"
+      Cf-Cache-Status:
+      - DYNAMIC
+      Cf-Ray:
+      - 9dbac1acfe9bfa1c-BOM
+    body:
+      encoding: ASCII-8BIT
+      string: '{"Title":"Inception","Year":"2010","Rated":"PG-13","Released":"16 Jul
+        2010","Runtime":"148 min","Genre":"Action, Adventure, Sci-Fi","Director":"Christopher
+        Nolan","Writer":"Christopher Nolan","Actors":"Leonardo DiCaprio, Joseph Gordon-Levitt,
+        Elliot Page","Plot":"A thief who steals corporate secrets through the use
+        of dream-sharing technology is given the inverse task of planting an idea
+        into the mind of a CEO, but his tragic past may doom the project and his team
+        to disaster.","Language":"English, Japanese, French","Country":"United States,
+        United Kingdom","Awards":"Won 4 Oscars. 160 wins & 220 nominations total","Poster":"https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg","Ratings":[{"Source":"Internet
+        Movie Database","Value":"8.8/10"},{"Source":"Rotten Tomatoes","Value":"87%"},{"Source":"Metacritic","Value":"74/100"}],"Metascore":"74","imdbRating":"8.8","imdbVotes":"2,793,322","imdbID":"tt1375666","Type":"movie","DVD":"N/A","BoxOffice":"$292,587,330","Production":"N/A","Website":"N/A","Response":"True"}'
+  recorded_at: Fri, 13 Mar 2026 11:39:10 GMT
+recorded_with: VCR 6.4.0

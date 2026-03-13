@@ -82,7 +82,22 @@ end
 
 # VCR — records & replays real HTTP calls (Topic 2)
 VCR.configure do |config|
-  config.cassette_library_dir = 'spec/vcr_cassettes'
+  # Where cassette files get saved
+  config.cassette_library_dir = "spec/vcr_cassettes"
+
+  # VCR uses WebMock under the hood to block real HTTP
   config.hook_into :webmock
+
+  # Lets you use :vcr tag on any test automatically
   config.configure_rspec_metadata!
+
+  # Hide your real API key in saved cassette files
+  # so you can safely commit cassettes to git
+  config.filter_sensitive_data("<OMDB_API_KEY>") { ENV["OMDB_API_KEY"] }
+
+  # Allow real HTTP calls ONLY when recording a new cassette
+  # After that, all HTTP is blocked unless cassette exists
+  config.default_cassette_options = {
+    record: :new_episodes
+  }
 end
