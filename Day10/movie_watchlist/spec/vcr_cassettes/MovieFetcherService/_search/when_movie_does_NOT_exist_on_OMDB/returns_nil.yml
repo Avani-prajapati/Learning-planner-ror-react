@@ -1,0 +1,51 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://www.omdbapi.com/?apikey=<OMDB_API_KEY>&t=xyzzy_fake_movie_12345
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 13 Mar 2026 12:02:37 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '47'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - public, max-age=3600
+      Expires:
+      - Fri, 13 Mar 2026 13:02:36 GMT
+      Last-Modified:
+      - Fri, 13 Mar 2026 12:02:36 GMT
+      Vary:
+      - "*"
+      Server:
+      - cloudflare
+      X-Aspnet-Version:
+      - 4.0.30319
+      Access-Control-Allow-Origin:
+      - "*"
+      Cf-Cache-Status:
+      - DYNAMIC
+      Cf-Ray:
+      - 9dbae403bdf8db85-BOM
+    body:
+      encoding: UTF-8
+      string: '{"Response":"False","Error":"Movie not found!"}'
+  recorded_at: Fri, 13 Mar 2026 12:02:36 GMT
+recorded_with: VCR 6.4.0
