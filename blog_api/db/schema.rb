@@ -10,13 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_16_181157) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_133411) do
+  create_table "article_tags", force: :cascade do |t|
+    t.integer "article_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_article_tags_on_article_id"
+    t.index ["tag_id"], name: "index_article_tags_on_tag_id"
+  end
+
   create_table "articles", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
     t.string "status"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
+  create_table "articles_tags", id: false, force: :cascade do |t|
+    t.integer "article_id", null: false
+    t.integer "tag_id", null: false
   end
 
   create_table "comments", force: :cascade do |t|
@@ -26,8 +42,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_181157) do
     t.datetime "created_at", null: false
     t.string "status"
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["article_id"], name: "index_comments_on_article_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "profiles", force: :cascade do |t|
+    t.string "avatar"
+    t.text "bio"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "article_tags", "articles"
+  add_foreign_key "article_tags", "tags"
+  add_foreign_key "articles", "users"
   add_foreign_key "comments", "articles"
+  add_foreign_key "comments", "users"
+  add_foreign_key "profiles", "users"
 end
