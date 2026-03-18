@@ -31,5 +31,4 @@ person = Human.new.walk
 dog = Animal.new
 dog.walk
 dog.eat
-
 Animal.fly
