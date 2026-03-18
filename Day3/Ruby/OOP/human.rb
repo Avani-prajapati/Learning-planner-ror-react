@@ -4,16 +4,20 @@ module Walkable
   end  
 end  
 
+module Eatable
+  def eat
+    puts "Eating...!"
+  end  
+end  
+
 class Human
   include Walkable
+  include Eatable
 end 
 
 class Animal
   include Walkable
-
-  def eat
-    puts "Eating...!"
-  end
+  include Eatable
 end  
 
 person = Human.new.walk
