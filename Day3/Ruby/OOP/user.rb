@@ -6,6 +6,7 @@ end
 
 module Finder
     def find_by_email(email)
+        puts "user is #{@name} email"
         User.class_variable_get(:@@user).find{|user| user.email == email}
     end      
 end   
@@ -24,7 +25,16 @@ class User
        @@user << self
     end    
     
-end     
+end 
+
+# class Human < User
+#     def classvarible
+#         puts "#{@@user}"
+#     end    
+# end    
+
+# human = Human.new('Avani','avani@gmail.com')
+# human.classvarible
 
 user = User.new('Avani','avani@gmail.com')
 user.login
