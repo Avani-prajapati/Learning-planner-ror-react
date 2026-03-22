@@ -17,6 +17,9 @@ class ArticlesController < ApplicationController
     @article = current_user.articles.build(article_params)   # ties article to logged-in user
 
     if @article.save
+      if @article.status == "public"
+        NotifyUsersAboutArticleJob.perform_later(@article)
+      end  
       redirect_to @article, notice: "Article created!"
     else
       render :new, status: :unprocessable_entity
@@ -24,15 +27,18 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    unless @article.user == current_user
-      redirect_to root_path, alert: "Not authorized."
-    end
+
+    if @article.user != current_user
+      redirect_to root_path, alert: "Not authorized."  
+    end  
+
+    
   end
 
   def update
-    unless @article.user == current_user
+    if @article.user != current_user
       redirect_to root_path, alert: "Not authorized." and return
-    end
+    end  
 
     if @article.update(article_params)
       redirect_to @article, notice: "Article updated!"
@@ -42,7 +48,7 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    unless @article.user == current_user
+    if @article.user != current_user
       redirect_to root_path, alert: "Not authorized." and return
     end
 

@@ -1,0 +1,10 @@
+<h1>Hi <%= @author.name %>,</h1>
+
+<p>
+  <strong><%= @comment.user.name %></strong>
+  commented on your article <em>"<%= @article.title %>"</em>:
+</p>
+
+<blockquote><%= @comment.body %></blockquote>
+
+<p><%= link_to "View comment", article_url(@article) %></p>

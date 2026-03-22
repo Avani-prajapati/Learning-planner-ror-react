@@ -9,10 +9,11 @@ Rails.application.routes.draw do
     resources :sessions, only: [:new, :create]    # for login form + submit
     delete "/logout", to: "sessions#destroy", as: :logout   # clean logout, no id needed
   
+    resource :profile, only: [:show, :edit, :update]
+
     resources :articles do
       resources :comments, only: [:create, :destroy]
     end
-  #get "/articles", to: "articles#index"
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

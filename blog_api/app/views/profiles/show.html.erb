@@ -1,0 +1,12 @@
+<h1><%= current_user.name %>'s Profile</h1>
+
+<%# official guide: check attached? before rendering %>
+<% if @profile.avatar.attached? %>
+  <%= image_tag @profile.avatar.variant(resize_to_limit: [200, 200]) %>
+<% else %>
+  <p>No profile photo yet.</p>
+<% end %>
+
+<p><strong>Bio:</strong> <%= @profile.bio.presence || "No bio yet." %></p>
+
+<%= link_to "Edit Profile", edit_profile_path %>

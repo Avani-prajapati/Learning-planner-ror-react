@@ -15,9 +15,10 @@ class ApplicationController < ActionController::Base
   end
   
   def require_login
-    unless logged_in?
-      redirect_to new_session_path, alert: "Please log in first."
+    if logged_in?
+      return
     end
+    redirect_to new_session_path, alert: "Please log in first."
   end
 
   # Changes to the importmap will invalidate the etag for HTML responses
