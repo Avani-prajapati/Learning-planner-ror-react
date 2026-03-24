@@ -13,6 +13,8 @@ import { GET_ALL_POSTS } from './graphql/queries';
 import { type Post } from './types';
 import PostCard from './components/PostCard';
 import PostDetail from './components/PostDetail';
+import { useState } from 'react';
+import CreatePostForm from './components/AddPostForm';
 
 interface GetAllPostsQuery {
   posts: Post[];
@@ -20,6 +22,7 @@ interface GetAllPostsQuery {
 
 function App() {
   const { data, loading, error } = useQuery<GetAllPostsQuery>(GET_ALL_POSTS);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   return (
     <Box className="min-h-screen bg-linear-to-br from-gray-50 to-gray-200">
@@ -30,7 +33,7 @@ function App() {
             <Heading size="lg" className="text-gray-800">
               Posts Dashboard
             </Heading>
-            <Button colorScheme={'blue'}>Add Post</Button>
+            <Button colorScheme={'blue'} onClick={() => setShowCreateForm(true)}>Add Post</Button>
           </HStack>
         </Container>
       </Box>
@@ -83,6 +86,7 @@ function App() {
       </Container>
 
       <PostDetail/>
+      {showCreateForm && <CreatePostForm onClose={() => setShowCreateForm(false)}></CreatePostForm>}
     </Box>
   );
 }
