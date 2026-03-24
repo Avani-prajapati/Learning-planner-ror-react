@@ -13,6 +13,7 @@ import {
 import { PostContext } from '../contexts/PostContext';
 import { GET_POST } from '../graphql/queries';
 import { type Post } from '../types';
+import AddCommentForm from './AddCommentForm';
 
 interface GetPostQuery {
   post: Post;
@@ -100,6 +101,10 @@ function PostDetail() {
                     ))}
                   </VStack>
                 )}
+              </Box>
+
+              <Box borderTop={'1px'} borderColor={"gray.200"} pt={4}>
+                <AddCommentForm/>
               </Box>
             </VStack>
           )}
