@@ -2,9 +2,17 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
 import { Box, Button, Input, Textarea, Text, Heading, VStack } from '@chakra-ui/react';
 import { CREATE_POST, GET_ALL_POSTS } from '../graphql/queries';
+import type { Post } from '../types';
 
 interface Props {
   onClose: () => void;
+}
+
+interface createPostResponse {
+    createPost: {
+        post: Post | null
+        errors: string[]
+    }
 }
 
 function CreatePostForm({ onClose }: Props) {
@@ -12,7 +20,7 @@ function CreatePostForm({ onClose }: Props) {
   const [body, setBody] = useState('');
   const [error, setError] = useState('');
 
-  const [createPost, { loading }] = useMutation(CREATE_POST, {
+  const [createPost, { loading }] = useMutation<createPostResponse>(CREATE_POST, {
     refetchQueries: [{ query: GET_ALL_POSTS }],
     onCompleted: (data) => {
       if (data.createPost.errors.length > 0) {

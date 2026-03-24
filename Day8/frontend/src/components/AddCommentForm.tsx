@@ -3,13 +3,21 @@ import { useMutation } from '@apollo/client/react';
 import { Box, Button, Textarea, Text } from '@chakra-ui/react';
 import { CREATE_COMMENT, GET_POST } from '../graphql/queries';
 import { PostContext } from '../contexts/PostContext';
+import type { Comment } from '../types';
+
+interface createCommentResponse {
+  createComment: {
+      comment: Comment | null
+      errors: string[]
+  }
+}
 
 function AddCommentForm() {
   const { selectedPost } = useContext(PostContext);
   const [body, setBody] = useState('');
   const [error, setError] = useState('');
 
-  const [createComment, { loading }] = useMutation(CREATE_COMMENT, {
+  const [createComment, { loading }] = useMutation<createCommentResponse>(CREATE_COMMENT, {
     refetchQueries: [
       { query: GET_POST, variables: { id: selectedPost?.id } },
     ],

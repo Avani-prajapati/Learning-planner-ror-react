@@ -28,7 +28,6 @@ function PostCard({ post }: Props) {
       position="relative"
       height="100%"
     >
-      {/* Top accent line */}
       <Box
         position="absolute"
         top={0}
@@ -41,9 +40,7 @@ function PostCard({ post }: Props) {
         _hover={{ opacity: 1 }}
       />
       
-      {/* Content Container */}
       <VStack align="stretch" p={6} gap={3}>
-        {/* Title */}
         <Text
           fontSize="lg"
           fontWeight="semibold"
@@ -55,7 +52,6 @@ function PostCard({ post }: Props) {
           {post.title}
         </Text>
 
-        {/* Body */}
         <Text
           fontSize="sm"
           color="gray.600"
@@ -65,7 +61,6 @@ function PostCard({ post }: Props) {
           {post.body}
         </Text>
 
-        {/* Footer */}
         <HStack 
           justify="space-between" 
           align="center" 
