@@ -6,6 +6,9 @@ export const GET_ALL_POSTS = gql`
       id
       title
       body
+      comments {
+        id
+      }
     }
   }
 `;
