@@ -1,54 +1,44 @@
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
-import { Box, Heading, Text, Spinner } from '@chakra-ui/react';
-
-interface Post {
-  id: string,
-  title: string
-}
-
-interface GetPostsQuery {
-  posts : Post[];
-}
-
-const TEST_QUERY = gql`
-  query {
-    posts {
-      id
-      title
-    }
-  }
-`;
+import { useContext } from 'react';
+import { Box, Heading, Text, Button } from '@chakra-ui/react';
+import { PostContext } from './contexts/PostContext';
 
 function App() {
-  const { data, loading, error } = useQuery<GetPostsQuery>(TEST_QUERY);
+  const { selectedPost, isDetailOpen, selectPost, closeDetail } = useContext(PostContext);
 
-  console.log(data)
   return (
     <Box className="min-h-screen bg-gray-100 flex items-center justify-center">
       <Box textAlign="center" p={8}>
         <Heading size="xl" mb={4}>
-          Apollo Connection Test
+          Context API Test
         </Heading>
 
-        {loading && <Spinner size="lg" />}
+        <Text color="gray.500" mb={4}>
+          isDetailOpen: <strong>{String(isDetailOpen)}</strong>
+        </Text>
 
-        {error && (
-          <Text color="red.500">
-            ❌ Error: {error.message}
-          </Text>
-        )}
+        <Text color="gray.500" mb={6}>
+          selectedPost: <strong>{selectedPost ? selectedPost.title : 'none'}</strong>
+        </Text>
 
-        {data && (
-          <Box>
-            <Text color="green.500" fontWeight="bold" mb={2}>
-              ✅ Connected to Rails GraphQL!
-            </Text>
-            <Text color="gray.600">
-              Found {data.posts.length} posts
-            </Text>
-          </Box>
-        )}
+        <Button
+          onClick={() =>
+            selectPost({
+              id: '1',
+              title: 'Test Post',
+              body: 'Hello from context!',
+              createdAt: new Date().toISOString(),
+              comments: [],
+            })
+          }
+          colorScheme="blue"
+          mr={3}
+        >
+          Select a Post
+        </Button>
+
+        <Button onClick={closeDetail} colorScheme="red">
+          Close Detail
+        </Button>
       </Box>
     </Box>
   );
