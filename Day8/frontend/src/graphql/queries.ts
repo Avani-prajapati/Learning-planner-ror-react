@@ -1,56 +1,63 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export const GET_ALL_POSTS = gql`
-  query GetAllPosts {
-    posts {
+export const GET_ALL_ARTICLES = gql`
+  query GetAllArticles {
+    articles {
       id
       title
       body
+      status
+      createdAt
+      user {
+        id
+        name
+      }
       comments {
         id
+      }
+      tags {
+        id
+        name
       }
     }
   }
 `;
 
-export const GET_POST = gql`
-  query GetPost($id: ID!) {
-    post(id: $id) {
+export const GET_ARTICLE = gql`
+  query GetArticle($id: ID!) {
+    article(id: $id) {
       id
       title
       body
+      status
+      createdAt
+      user {
+        id
+        name
+      }
       comments {
         id
         body
-      }
-    }
-  }
-`;
-
-export const CREATE_COMMENT = gql`
-  mutation CreateComment($postId: ID!, $body: String!) {
-    createComment(input: { postId: $postId, body: $body }) {
-      comment {
-        id
-        body
-      }
-      errors
-    }
-  }
-`;
-
-export const CREATE_POST = gql`
-  mutation CreatePost($title: String!, $body: String!) {
-    createPost(input: { title: $title, body: $body }) {
-      post {
-        id
-        title
-        body
-        comments {
+        status
+        createdAt
+        user {
           id
+          name
         }
       }
-      errors
+      tags {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const GET_TAGS = gql`
+  query GetTags {
+    tags {
+      id
+      name
     }
   }
 `;

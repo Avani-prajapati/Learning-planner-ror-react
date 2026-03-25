@@ -1,9 +1,10 @@
 import { useState, useContext } from "react";
 import { useMutation } from "@apollo/client/react";
 import { Box, Button, Textarea, Text } from "@chakra-ui/react";
-import { CREATE_COMMENT, GET_POST } from "../graphql/queries";
-import { PostContext } from "../contexts/PostContext";
+import { GET_ARTICLE } from "../graphql/queries";
+import { ArticleContext } from "../contexts/ArticleContext";
 import type { Comment } from "../types";
+import { CREATE_COMMENT } from "../graphql/mutations";
 
 interface createCommentResponse {
   createComment: {
@@ -13,7 +14,7 @@ interface createCommentResponse {
 }
 
 function CreateCommentForm() {
-  const { selectedPost } = useContext(PostContext);
+  const { selectedArticle } = useContext(ArticleContext);
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
 
@@ -21,7 +22,7 @@ function CreateCommentForm() {
     CREATE_COMMENT,
     {
       refetchQueries: [
-        { query: GET_POST, variables: { id: selectedPost?.id } },
+        { query: GET_ARTICLE, variables: { id: selectedArticle?.id } },
       ],
       onCompleted: (data) => {
         if (data.createComment.errors.length > 0) {
@@ -38,7 +39,7 @@ function CreateCommentForm() {
   const handleSubmit = () => {
     if (!body.trim()) return;
     createComment({
-      variables: { postId: selectedPost?.id, body: body.trim() },
+      variables: { articleId: selectedArticle?.id, body: body.trim() },
     });
   };
 
@@ -58,7 +59,7 @@ function CreateCommentForm() {
 
       {error && (
         <Text color="red.500" fontSize="sm" mt={1}>
-          {error}
+          {error} {error == "Not authenticated"?"Please login":""}
         </Text>
       )}
 
@@ -71,7 +72,7 @@ function CreateCommentForm() {
           size="sm"
           borderRadius="xl"
         >
-          Post Comment
+          Article Comment
         </Button>
       </div>
     </Box>

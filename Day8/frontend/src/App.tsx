@@ -9,20 +9,30 @@ import {
   Container,
   Button,
 } from "@chakra-ui/react";
-import { GET_ALL_POSTS } from "./graphql/queries";
-import { type Post } from "./types";
-import PostCard from "./components/PostCard";
-import PostDetail from "./components/PostDetail";
+import { GET_ALL_ARTICLES } from "./graphql/queries";
+import { type Article } from "./types";
+import ArticleCard from "./components/ArticleCard";
+import ArticleDetail from "./components/ArticleDetail";
 import { useState } from "react";
-import CreatePostForm from "./components/CreatePostForm";
+import CreateArticleForm from "./components/CreateArticleForm";
+import { useAuth } from "./contexts/AuthContext";
+import AuthModal from "./components/AuthModel";
 
-interface GetAllPostsQuery {
-  posts: Post[];
+interface GetAllArticlesQuery {
+  articles: Article[];
 }
 
 function App() {
-  const { data, loading, error } = useQuery<GetAllPostsQuery>(GET_ALL_POSTS);
+  const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
+  const [tabOption, setTabOption] = useState('');
+
+  function handleModal(tab:string){
+    setShowAuthModal(true);
+	setTabOption(tab)
+  }
 
   return (
     <Box className="min-h-screen bg-linear-to-br from-gray-50 to-gray-200">
@@ -30,23 +40,38 @@ function App() {
         <Container maxW="6xl" py={6}>
           <HStack align="start" className="justify-between">
             <Heading size="lg" className="text-gray-800">
-              Posts Dashboard
+              Articles Dashboard
             </Heading>
-            <Button
-              colorScheme={"blue"}
-              onClick={() => setShowCreateForm(true)}
-            >
-              Add Post
-            </Button>
+			<HStack gap={3}>
+              {isAuthenticated ? (
+                <>
+                  <Text fontSize="sm" color="gray.600">👋 {user?.name}</Text>
+                  <Button variant="outline" colorScheme="red" onClick={logout}>
+                    Logout
+                  </Button>
+                </>
+              ) : (
+				<>
+                <Button colorScheme="blue" onClick={()=>handleModal('signin')}>
+                  Login
+                </Button>
+                <Button colorScheme="blue" onClick={()=>handleModal('signup')}>
+                  Sign up
+                </Button>
+				</>
+              )}
+            </HStack>
+           
           </HStack>
         </Container>
       </Box>
 
       <Container maxW="6xl" py={10}>
+         
         {loading && (
           <VStack gap={4} py={20}>
             <Spinner size="xl" width={"4px"} color="blue.500" />
-            <Text className="text-gray-500">Loading posts...</Text>
+            <Text className="text-gray-500">Loading Articles...</Text>
           </VStack>
         )}
 
@@ -57,42 +82,50 @@ function App() {
             </Text>
           </Box>
         )}
-
-        {data && data.posts.length === 0 && (
+        {data && <Button
+              colorScheme={"blue"}
+              onClick={() => setShowCreateForm(true)}
+            >
+              Add Article
+        </Button>}
+        {data && data.articles.length === 0 && (
           <VStack
             gap={4}
             py={20}
             className="bg-white rounded-2xl shadow-sm border border-gray-200"
           >
             <Text className="text-gray-600 font-medium">
-              No posts available
+              No Articles available
             </Text>
             <Text className="text-gray-400 text-sm">
-              Start by creating your first post 🚀
+              Start by creating your first Article 🚀
             </Text>
           </VStack>
         )}
 
-        {data && data.posts.length > 0 && (
+        {data && data.articles.length > 0 && (
           <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.posts.map((post) => (
+           
+            {data.articles.map((article) => (
               <Box
-                key={post.id}
+                key={article.id}
                 className="transform transition duration-300 hover:scale-[1.02]"
               >
-                <PostCard post={post} />
+                <ArticleCard Article={article} />
               </Box>
             ))}
           </Box>
         )}
       </Container>
 
-      <PostDetail />
+      <ArticleDetail />
       {showCreateForm && (
-        <CreatePostForm
+        <CreateArticleForm
           onClose={() => setShowCreateForm(false)}
-        ></CreatePostForm>
+        ></CreateArticleForm>
       )}
+
+	  {showAuthModal && <AuthModal onClose={()=>setShowAuthModal(false)} tabOption={tabOption}></AuthModal>}
     </Box>
   );
 }

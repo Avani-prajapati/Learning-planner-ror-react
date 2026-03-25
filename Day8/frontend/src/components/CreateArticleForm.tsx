@@ -9,32 +9,33 @@ import {
   Heading,
   VStack,
 } from "@chakra-ui/react";
-import { CREATE_POST, GET_ALL_POSTS } from "../graphql/queries";
-import type { Post } from "../types";
+import { GET_ALL_ARTICLES } from "../graphql/queries";
+import { CREATE_ARTICLE } from "../graphql/mutations";
+import type { Article } from "../types";
 
 interface Props {
   onClose: () => void;
 }
 
-interface createPostResponse {
-  createPost: {
-    post: Post | null;
+interface createArticleResponse {
+  createArticle: {
+    Article: Article | null;
     errors: string[];
   };
 }
 
-function CreatePostForm({ onClose }: Props) {
+function CreateArticleForm({ onClose }: Props) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
 
-  const [createPost, { loading }] = useMutation<createPostResponse>(
-    CREATE_POST,
+  const [createArticle, { loading }] = useMutation<createArticleResponse>(
+    CREATE_ARTICLE,
     {
-      refetchQueries: [{ query: GET_ALL_POSTS }],
+      refetchQueries: [{ query: GET_ALL_ARTICLES }],
       onCompleted: (data) => {
-        if (data.createPost.errors.length > 0) {
-          setError(data.createPost.errors[0]);
+        if (data.createArticle.errors.length > 0) {
+          setError(data.createArticle.errors[0]);
         } else {
           setTitle("");
           setBody("");
@@ -51,7 +52,7 @@ function CreatePostForm({ onClose }: Props) {
       setError("Title and body are required.");
       return;
     }
-    createPost({ variables: { title: title.trim(), body: body.trim() } });
+    createArticle({ variables: { title: title.trim(), body: body.trim(), status: "public" } });
   };
 
   return (
@@ -74,7 +75,7 @@ function CreatePostForm({ onClose }: Props) {
         onClick={(e) => e.stopPropagation()}
       >
         <Heading size="md" mb={6}>
-          Create New Post
+          Create New Article
         </Heading>
 
         <VStack gap={4} align="stretch">
@@ -83,7 +84,7 @@ function CreatePostForm({ onClose }: Props) {
               Title
             </Text>
             <Input
-              placeholder="Enter post title..."
+              placeholder="Enter Article title..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               borderRadius="xl"
@@ -95,7 +96,7 @@ function CreatePostForm({ onClose }: Props) {
               Body
             </Text>
             <Textarea
-              placeholder="Write your post content..."
+              placeholder="Write your Article content..."
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={5}
@@ -106,7 +107,7 @@ function CreatePostForm({ onClose }: Props) {
 
           {error && (
             <Text color="red.500" fontSize="sm">
-              {error}
+              {error}  {error == "Not authenticated"?"-Please login":""}
             </Text>
           )}
 
@@ -121,7 +122,7 @@ function CreatePostForm({ onClose }: Props) {
               loading={loading}
               disabled={!title.trim() || !body.trim()}
             >
-              Create Post
+              Create Article
             </Button>
           </Box>
         </VStack>
@@ -130,4 +131,4 @@ function CreatePostForm({ onClose }: Props) {
   );
 }
 
-export default CreatePostForm;
+export default CreateArticleForm;

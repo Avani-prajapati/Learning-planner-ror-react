@@ -10,21 +10,21 @@ import {
   HStack,
   Button,
 } from "@chakra-ui/react";
-import { PostContext } from "../contexts/PostContext";
-import { GET_POST } from "../graphql/queries";
-import { type Post } from "../types";
+import { ArticleContext } from "../contexts/ArticleContext";
+import { GET_ARTICLE } from "../graphql/queries";
+import { type Article } from "../types";
 import AddCommentForm from "./CreateCommentForm";
 
-interface GetPostQuery {
-  post: Post;
+interface GetArticleQuery {
+  article: Article;
 }
 
-function PostDetail() {
-  const { selectedPost, isDetailOpen, closeDetail } = useContext(PostContext);
+function ArticleDetail() {
+  const { selectedArticle, isDetailOpen, closeDetail } = useContext(ArticleContext);
 
-  const { data, loading, error } = useQuery<GetPostQuery>(GET_POST, {
-    variables: { id: selectedPost?.id },
-    skip: !selectedPost?.id,
+  const { data, loading, error } = useQuery<GetArticleQuery>(GET_ARTICLE, {
+    variables: { id: selectedArticle?.id },
+    skip: !selectedArticle?.id,
   });
 
   if (!isDetailOpen) return null;
@@ -50,7 +50,7 @@ function PostDetail() {
       >
         <Box borderBottom="1px" borderColor="gray.200" px={6} py={4}>
           <HStack justify="space-between" align="center">
-            <Heading size="md">Post Details</Heading>
+            <Heading size="md">Article Details</Heading>
             <Button size="sm" variant="ghost" onClick={closeDetail}>
               Close
             </Button>
@@ -75,28 +75,28 @@ function PostDetail() {
             <VStack align="stretch" gap={4}>
               <Box>
                 <Heading size="lg" mb={2}>
-                  {data.post.title}
+                  {data.article.title}
                 </Heading>
-                <Badge colorScheme="blue">Post #{data.post.id}</Badge>
+                <Badge colorScheme="blue">Article #{data.article.id}</Badge>
               </Box>
 
               <Box bg="gray.50" p={4} borderRadius="md">
-                <Text>{data.post.body}</Text>
+                <Text>{data.article.body}</Text>
               </Box>
 
               <Box>
                 <HStack justify="space-between" mb={3}>
                   <Heading size="sm">Comments</Heading>
                   <Badge colorScheme="blue">
-                    {data.post.comments?.length || 0}
+                    {data.article.comments?.length || 0}
                   </Badge>
                 </HStack>
 
-                {!data.post.comments || data.post.comments.length === 0 ? (
+                {!data.article.comments || data.article.comments.length === 0 ? (
                   <Text color="gray.500">No comments yet.</Text>
                 ) : (
                   <VStack gap={3} align="stretch">
-                    {data.post.comments.map((comment) => (
+                    {data.article.comments.map((comment) => (
                       <Box
                         key={comment.id}
                         bg="gray.50"
@@ -121,4 +121,4 @@ function PostDetail() {
   );
 }
 
-export default PostDetail;
+export default ArticleDetail;

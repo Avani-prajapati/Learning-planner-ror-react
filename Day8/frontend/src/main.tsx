@@ -5,15 +5,18 @@ import App from "./App.tsx";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { ApolloProvider } from "@apollo/client/react";
 import client from "./apolloClient.ts";
-import { PostProvider } from "./contexts/PostContext.tsx";
+import { ArticleProvider } from "./contexts/ArticleContext.tsx";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ApolloProvider client={client}>
       <ChakraProvider value={defaultSystem}>
-        <PostProvider>
-          <App />
-        </PostProvider>
+        <AuthProvider>
+         <ArticleProvider>
+           <App />
+         </ArticleProvider>
+        </AuthProvider>
       </ChakraProvider>
     </ApolloProvider>
   </StrictMode>,

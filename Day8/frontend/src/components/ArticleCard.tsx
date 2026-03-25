@@ -1,18 +1,18 @@
 import { useContext } from "react";
 import { Box, Text, Badge, HStack, VStack } from "@chakra-ui/react";
-import { PostContext } from "../contexts/PostContext";
-import { type Post } from "../types";
+import { ArticleContext } from "../contexts/ArticleContext";
+import { type Article } from "../types";
 
 interface Props {
-  post: Post;
+  Article: Article;
 }
 
-function PostCard({ post }: Props) {
-  const { selectPost } = useContext(PostContext);
+function ArticleCard({ Article }: Props) {
+  const { selectArticle } = useContext(ArticleContext);
 
   return (
     <Box
-      onClick={() => selectPost(post)}
+      onClick={() => selectArticle(Article)}
       cursor="pointer"
       bg="white"
       borderRadius="2xl"
@@ -37,11 +37,11 @@ function PostCard({ post }: Props) {
           transition="color 0.2s"
           _hover={{ color: "blue.500" }}
         >
-          {post.title}
+          {Article.title}
         </Text>
 
         <Text fontSize="sm" color="gray.600" lineHeight="relaxed" mb={2}>
-          {post.body}
+          {Article.body}
         </Text>
 
         <HStack
@@ -65,7 +65,7 @@ function PostCard({ post }: Props) {
             <Box as="span" mr={1}>
               💬
             </Box>
-            {post.comments?.length ?? 0} comments
+            {Article.comments?.length ?? 0} comments
           </Badge>
 
           <Text
@@ -83,4 +83,4 @@ function PostCard({ post }: Props) {
   );
 }
 
-export default PostCard;
+export default ArticleCard;
