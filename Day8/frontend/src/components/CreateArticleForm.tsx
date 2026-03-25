@@ -26,11 +26,15 @@ interface CreateArticleResponse {
   };
 }
 
+interface TagsQuery {
+  tags: Tag[];
+}
+
 function CreateArticleForm({ onClose }: Props) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
-  const { data: tagsData } = useQuery(GET_TAGS);
+  const { data: tagsData } = useQuery<TagsQuery>(GET_TAGS);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
   const toggleTag = (id: string) => {
