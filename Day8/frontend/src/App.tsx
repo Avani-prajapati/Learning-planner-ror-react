@@ -25,18 +25,21 @@ interface GetAllArticlesQuery {
 function App() {
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
 
-const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES, {
-  variables: { tagId: selectedTagId },
-});
+  const { data, loading, error } = useQuery<GetAllArticlesQuery>(
+    GET_ALL_ARTICLES,
+    {
+      variables: { tagId: selectedTagId },
+    },
+  );
   // const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
-  const [tabOption, setTabOption] = useState('');
+  const [tabOption, setTabOption] = useState("");
 
-  function handleModal(tab:string){
+  function handleModal(tab: string) {
     setShowAuthModal(true);
-	setTabOption(tab)
+    setTabOption(tab);
   }
 
   return (
@@ -47,33 +50,38 @@ const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES,
             <Heading size="lg" className="text-gray-800">
               Articles Dashboard
             </Heading>
-			<HStack gap={3}>
+            <HStack gap={3}>
               {isAuthenticated ? (
                 <>
-                  <Text fontSize="sm" color="gray.600">👋 {user?.name}</Text>
+                  <Text fontSize="sm" color="gray.600">
+                    👋 {user?.name}
+                  </Text>
                   <Button variant="outline" colorScheme="red" onClick={logout}>
                     Logout
                   </Button>
                 </>
               ) : (
-				<>
-                <Button colorScheme="blue" onClick={()=>handleModal('signin')}>
-                  Login
-                </Button>
-                <Button colorScheme="blue" onClick={()=>handleModal('signup')}>
-                  Sign up
-                </Button>
-				</>
+                <>
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => handleModal("signin")}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => handleModal("signup")}
+                  >
+                    Sign up
+                  </Button>
+                </>
               )}
             </HStack>
-           
           </HStack>
         </Container>
       </Box>
-  
 
       <Container maxW="6xl" py={5}>
-         
         {loading && (
           <VStack gap={4} py={20}>
             <Spinner size="xl" width={"4px"} color="blue.500" />
@@ -88,41 +96,44 @@ const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES,
             </Text>
           </Box>
         )}
-        {data && 
-        (<HStack className=" justify-between" pb={3}>
-          <HStack gap={2} flexWrap="wrap" > 
-
-          <Button
-            size="sm"
-            borderRadius="full"
-            colorScheme={selectedTagId === null ? 'blue' : 'gray'}
-            onClick={() => setSelectedTagId(null)}
-          >
-            All
-          </Button>
-          {data?.articles
-            .flatMap((a) => a.tags)
-            .filter((tag, index, self) => self.findIndex((t) => t.id === tag.id) === index)
-            .map((tag) => (
+        {data && (
+          <HStack className=" justify-between" pb={3}>
+            <HStack gap={2} flexWrap="wrap">
               <Button
-                key={tag.id}
                 size="sm"
                 borderRadius="full"
-                colorScheme={selectedTagId === tag.id ? 'blue' : 'gray'}
-                onClick={() => setSelectedTagId(tag.id)}
+                colorScheme={selectedTagId === null ? "blue" : "gray"}
+                onClick={() => setSelectedTagId(null)}
               >
-                {tag.name}
+                All
               </Button>
-            ))}
-          </HStack>
+              {data?.articles
+                .flatMap((a) => a.tags)
+                .filter(
+                  (tag, index, self) =>
+                    self.findIndex((t) => t.id === tag.id) === index,
+                )
+                .map((tag) => (
+                  <Button
+                    key={tag.id}
+                    size="sm"
+                    borderRadius="full"
+                    colorScheme={selectedTagId === tag.id ? "blue" : "gray"}
+                    onClick={() => setSelectedTagId(tag.id)}
+                  >
+                    {tag.name}
+                  </Button>
+                ))}
+            </HStack>
             <Button
               colorScheme={"blue"}
               onClick={() => setShowCreateForm(true)}
               mb={2}
             >
               Add Article
-        </Button>
-        </HStack>)}
+            </Button>
+          </HStack>
+        )}
         {data && data.articles.length === 0 && (
           <VStack
             gap={4}
@@ -140,7 +151,6 @@ const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES,
 
         {data && data.articles.length > 0 && (
           <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-           
             {data.articles.map((article) => (
               <Box
                 key={article.id}
@@ -160,7 +170,12 @@ const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES,
         ></CreateArticleForm>
       )}
 
-	  {showAuthModal && <AuthModal onClose={()=>setShowAuthModal(false)} tabOption={tabOption}></AuthModal>}
+      {showAuthModal && (
+        <AuthModal
+          onClose={() => setShowAuthModal(false)}
+          tabOption={tabOption}
+        ></AuthModal>
+      )}
     </Box>
   );
 }

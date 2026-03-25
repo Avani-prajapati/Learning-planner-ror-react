@@ -92,7 +92,9 @@ function ArticleCard({ Article }: Props) {
             display="flex"
             alignItems="center"
           >
-            <Box as="span" mr={1}>💬</Box>
+            <Box as="span" mr={1}>
+              💬
+            </Box>
             {Article.comments?.length ?? 0} comments
           </Badge>
 

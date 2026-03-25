@@ -39,14 +39,14 @@ function CreateArticleForm({ onClose }: Props) {
 
   const toggleTag = (id: string) => {
     setSelectedTagIds((prev) =>
-      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id],
     );
   };
 
   const [createArticle, { loading }] = useMutation<CreateArticleResponse>(
     CREATE_ARTICLE,
     {
-      refetchQueries: [{ query: GET_ALL_ARTICLES, variables: {tagId: null} }],
+      refetchQueries: [{ query: GET_ALL_ARTICLES, variables: { tagId: null } }],
       onCompleted: (data) => {
         if (data.createArticle.errors.length > 0) {
           setError(data.createArticle.errors[0]);
@@ -58,7 +58,7 @@ function CreateArticleForm({ onClose }: Props) {
         }
       },
       onError: (err) => setError(err.message),
-    }
+    },
   );
 
   const handleSubmit = () => {
@@ -77,7 +77,8 @@ function CreateArticleForm({ onClose }: Props) {
   };
 
   const availableTags =
-    tagsData?.tags?.filter((tag: Tag) => !selectedTagIds.includes(tag.id)) || [];
+    tagsData?.tags?.filter((tag: Tag) => !selectedTagIds.includes(tag.id)) ||
+    [];
 
   return (
     <Box

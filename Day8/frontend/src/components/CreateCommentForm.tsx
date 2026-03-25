@@ -59,7 +59,7 @@ function CreateCommentForm() {
 
       {error && (
         <Text color="red.500" fontSize="sm" mt={1}>
-          {error} {error == "Not authenticated"?"Please login":""}
+          {error} {error == "Not authenticated" ? "Please login" : ""}
         </Text>
       )}
 

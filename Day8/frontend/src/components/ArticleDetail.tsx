@@ -20,7 +20,8 @@ interface GetArticleQuery {
 }
 
 function ArticleDetail() {
-  const { selectedArticle, isDetailOpen, closeDetail } = useContext(ArticleContext);
+  const { selectedArticle, isDetailOpen, closeDetail } =
+    useContext(ArticleContext);
 
   const { data, loading, error } = useQuery<GetArticleQuery>(GET_ARTICLE, {
     variables: { id: selectedArticle?.id },
@@ -92,7 +93,8 @@ function ArticleDetail() {
                   </Badge>
                 </HStack>
 
-                {!data.article.comments || data.article.comments.length === 0 ? (
+                {!data.article.comments ||
+                data.article.comments.length === 0 ? (
                   <Text color="gray.500">No comments yet.</Text>
                 ) : (
                   <VStack gap={3} align="stretch">

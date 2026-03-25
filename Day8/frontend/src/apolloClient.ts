@@ -10,10 +10,10 @@ const authLink = new SetContextLink(({ headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token? `Bearer ${token}` : ""
-    }
-  }
-})
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),

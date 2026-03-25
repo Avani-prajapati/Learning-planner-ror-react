@@ -13,9 +13,9 @@ createRoot(document.getElementById("root")!).render(
     <ApolloProvider client={client}>
       <ChakraProvider value={defaultSystem}>
         <AuthProvider>
-         <ArticleProvider>
-           <App />
-         </ArticleProvider>
+          <ArticleProvider>
+            <App />
+          </ArticleProvider>
         </AuthProvider>
       </ChakraProvider>
     </ApolloProvider>
