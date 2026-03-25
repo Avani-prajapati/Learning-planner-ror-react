@@ -8,13 +8,13 @@ import client from "./apolloClient.ts";
 import { PostProvider } from "./contexts/PostContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
-	<StrictMode>
-		<ApolloProvider client={client}>
-			<ChakraProvider value={defaultSystem}>
-				<PostProvider>
-					<App />
-				</PostProvider>
-			</ChakraProvider>
-		</ApolloProvider>
-	</StrictMode>,
+  <StrictMode>
+    <ApolloProvider client={client}>
+      <ChakraProvider value={defaultSystem}>
+        <PostProvider>
+          <App />
+        </PostProvider>
+      </ChakraProvider>
+    </ApolloProvider>
+  </StrictMode>,
 );
