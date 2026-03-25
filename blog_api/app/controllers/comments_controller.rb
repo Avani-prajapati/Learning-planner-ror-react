@@ -7,7 +7,6 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      NotifyAuthorAboutCommentJob.perform_later(@comment)
       redirect_to article_path(@article), notice: "Comment added!"
     else
       redirect_to article_path(@article), alert: "Comment could not be saved."

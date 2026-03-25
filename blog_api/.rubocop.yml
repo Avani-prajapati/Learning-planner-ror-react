@@ -1,8 +1,12 @@
-# Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
-
-# Overwrite or add rules to create your own house style
+---
+# Uses the same Ruby style rules as Rotom.
+# Copy this file to your app root as .rubocop.yml
 #
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+# Change ruby-3.3 to ruby-3.2 if you use Ruby 3.2
+
+inherit_gem:
+  standard: config/ruby-3.4.yml
+
+AllCops:
+  Exclude:
+    - "db/schema.rb"

@@ -3,17 +3,17 @@ Rails.application.routes.draw do
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
-    root "articles#index"
-  
-    resources :users,    only: [:new, :create]
-    resources :sessions, only: [:new, :create]    # for login form + submit
-    delete "/logout", to: "sessions#destroy", as: :logout   # clean logout, no id needed
-  
-    resource :profile, only: [:show, :edit, :update]
+  root "articles#index"
 
-    resources :articles do
-      resources :comments, only: [:create, :destroy]
-    end
+  resources :users, only: [:new, :create]
+  resources :sessions, only: [:new, :create]    # for login form + submit
+  delete "/logout", to: "sessions#destroy", as: :logout   # clean logout, no id needed
+
+  resource :profile, only: [:show, :edit, :update]
+
+  resources :articles do
+    resources :comments, only: [:create, :destroy]
+  end
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

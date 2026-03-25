@@ -8,8 +8,8 @@ class NotifyUsersAboutArticleJob < ApplicationJob
     recipients.each do |recipient|
       # official guide pattern: with(params).action.deliver_later
       ArticleMailer.with(article: article, recipient: recipient)
-                   .new_article
-                   .deliver_later
+        .new_article
+        .deliver_later
     end
   end
 end
