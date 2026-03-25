@@ -23,7 +23,12 @@ interface GetAllArticlesQuery {
 }
 
 function App() {
-  const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES);
+  const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
+
+const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES, {
+  variables: { tagId: selectedTagId },
+});
+  // const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
@@ -65,8 +70,9 @@ function App() {
           </HStack>
         </Container>
       </Box>
+  
 
-      <Container maxW="6xl" py={10}>
+      <Container maxW="6xl" py={5}>
          
         {loading && (
           <VStack gap={4} py={20}>
@@ -82,12 +88,41 @@ function App() {
             </Text>
           </Box>
         )}
-        {data && <Button
+        {data && 
+        (<HStack className=" justify-between" pb={3}>
+          <HStack gap={2} flexWrap="wrap" > 
+
+          <Button
+            size="sm"
+            borderRadius="full"
+            colorScheme={selectedTagId === null ? 'blue' : 'gray'}
+            onClick={() => setSelectedTagId(null)}
+          >
+            All
+          </Button>
+          {data?.articles
+            .flatMap((a) => a.tags)
+            .filter((tag, index, self) => self.findIndex((t) => t.id === tag.id) === index)
+            .map((tag) => (
+              <Button
+                key={tag.id}
+                size="sm"
+                borderRadius="full"
+                colorScheme={selectedTagId === tag.id ? 'blue' : 'gray'}
+                onClick={() => setSelectedTagId(tag.id)}
+              >
+                {tag.name}
+              </Button>
+            ))}
+          </HStack>
+            <Button
               colorScheme={"blue"}
               onClick={() => setShowCreateForm(true)}
+              mb={2}
             >
               Add Article
-        </Button>}
+        </Button>
+        </HStack>)}
         {data && data.articles.length === 0 && (
           <VStack
             gap={4}

@@ -42,8 +42,8 @@ export const SIGN_UP = gql`
 `;
 
 export const CREATE_ARTICLE = gql`
-  mutation CreateArticle($title: String!, $body: String!, $status: String!) {
-    createArticle(input: { title: $title, body: $body, status: $status }) {
+  mutation CreateArticle($title: String!, $body: String!, $status: String!, $tagIds: [ID!]) {
+    createArticle(input: { title: $title, body: $body, status: $status, tagIds: $tagIds }) {
       article {
         id
         title
@@ -66,3 +66,12 @@ export const CREATE_ARTICLE = gql`
     }
   }
 `;
+
+export const DELETE_ARTICLE = gql`
+mutation DeleteArticle($id: ID!) {
+  deleteArticle(input: {id: $id}) {
+    success
+    errors
+  }
+}
+`

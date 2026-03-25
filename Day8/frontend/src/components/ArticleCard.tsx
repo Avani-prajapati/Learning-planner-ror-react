@@ -1,7 +1,11 @@
 import { useContext } from "react";
-import { Box, Text, Badge, HStack, VStack } from "@chakra-ui/react";
+import { Box, Text, Badge, HStack, VStack, Button } from "@chakra-ui/react";
+import { useMutation } from "@apollo/client/react";
 import { ArticleContext } from "../contexts/ArticleContext";
+import { useAuth } from "../contexts/AuthContext";
 import { type Article } from "../types";
+import { DELETE_ARTICLE } from "../graphql/mutations";
+import { GET_ALL_ARTICLES } from "../graphql/queries";
 
 interface Props {
   Article: Article;
@@ -9,6 +13,18 @@ interface Props {
 
 function ArticleCard({ Article }: Props) {
   const { selectArticle } = useContext(ArticleContext);
+  const { user, isAuthenticated } = useAuth();
+
+  const [deleteArticle] = useMutation(DELETE_ARTICLE, {
+    refetchQueries: [{ query: GET_ALL_ARTICLES, variables: { tagId: null } }],
+  });
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    deleteArticle({ variables: { id: Article.id } });
+  };
+
+  const isOwner = isAuthenticated && user?.id === Article.user.id;
 
   return (
     <Box
@@ -29,16 +45,30 @@ function ArticleCard({ Article }: Props) {
       height="100%"
     >
       <VStack align="stretch" p={6} gap={3}>
-        <Text
-          fontSize="lg"
-          fontWeight="semibold"
-          color="gray.800"
-          lineHeight="short"
-          transition="color 0.2s"
-          _hover={{ color: "blue.500" }}
-        >
-          {Article.title}
-        </Text>
+        <HStack justify="space-between" align="start">
+          <Text
+            fontSize="lg"
+            fontWeight="semibold"
+            color="gray.800"
+            lineHeight="short"
+            transition="color 0.2s"
+            _hover={{ color: "blue.500" }}
+          >
+            {Article.title}
+          </Text>
+
+          {isOwner && (
+            <Button
+              size="xs"
+              colorScheme="red"
+              variant="ghost"
+              onClick={handleDelete}
+              borderRadius="lg"
+            >
+              X
+            </Button>
+          )}
+        </HStack>
 
         <Text fontSize="sm" color="gray.600" lineHeight="relaxed" mb={2}>
           {Article.body}
@@ -62,9 +92,7 @@ function ArticleCard({ Article }: Props) {
             display="flex"
             alignItems="center"
           >
-            <Box as="span" mr={1}>
-              💬
-            </Box>
+            <Box as="span" mr={1}>💬</Box>
             {Article.comments?.length ?? 0} comments
           </Badge>
 
