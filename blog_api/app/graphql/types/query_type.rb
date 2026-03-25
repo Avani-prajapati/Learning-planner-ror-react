@@ -25,8 +25,8 @@ module Types
     description "The query root of this schema"
 
     field :articles, resolver: Resolvers::ArticlesResolver
-    field :article,  resolver: Resolvers::ArticleResolver
-    field :tags,     resolver: Resolvers::TagsResolver
+    field :article, resolver: Resolvers::ArticleResolver
+    field :tags, resolver: Resolvers::TagsResolver
 
     field :me, Types::UserType, null: true,
       description: "The currently logged in user"

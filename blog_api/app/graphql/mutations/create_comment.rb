@@ -2,26 +2,26 @@ module Mutations
   class CreateComment < BaseMutation
     description "Add a comment to an article"
 
-    argument :article_id, ID,     required: true
-    argument :body,       String, required: true
-    argument :status,     String, required: false
+    argument :article_id, ID, required: true
+    argument :body, String, required: true
+    argument :status, String, required: false
 
     field :comment, Types::CommentType, null: true
-    field :errors,  [String],           null: false
+    field :errors, [String], null: false
 
     def resolve(article_id:, body:, status: "public")
-      return { comment: nil, errors: ["Not authenticated"] } unless context[:current_user]
+      return {comment: nil, errors: ["Not authenticated"]} unless context[:current_user]
 
       article = Article.find_by(id: article_id)
-      return { comment: nil, errors: ["Article not found"] } unless article
+      return {comment: nil, errors: ["Article not found"]} unless article
 
-      comment      = article.comments.build(body: body, status: status)
+      comment = article.comments.build(body: body, status: status)
       comment.user = context[:current_user]
 
       if comment.save
-        { comment: comment, errors: [] }
+        {comment: comment, errors: []}
       else
-        { comment: nil, errors: comment.errors.full_messages }
+        {comment: nil, errors: comment.errors.full_messages}
       end
     end
   end

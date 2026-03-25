@@ -2,8 +2,8 @@ module Types
   class ProfileType < Types::BaseObject
     description "A user profile"
 
-    field :id,        ID,     null: false
-    field :bio,        String, null: true
+    field :id, ID, null: false
+    field :bio, String, null: true
     field :avatar_url, String, null: true
 
     def avatar_url

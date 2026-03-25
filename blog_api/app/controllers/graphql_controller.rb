@@ -2,20 +2,20 @@ class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def execute
-    variables      = prepare_variables(params[:variables])
-    query          = params[:query]
+    variables = prepare_variables(params[:variables])
+    query = params[:query]
     operation_name = params[:operationName]
-    context        = { current_user: current_user }
+    context = {current_user: current_user}
 
     result = BlogApiSchema.execute(
       query,
-      variables:      variables,
-      context:        context,
+      variables: variables,
+      context: context,
       operation_name: operation_name
     )
 
     render json: result
-  rescue StandardError => e
+  rescue => e
     raise e unless Rails.env.development?
     handle_error_in_development(e)
   end
@@ -26,10 +26,10 @@ class GraphqlController < ApplicationController
     header = request.headers["Authorization"]
     return nil unless header.present?
 
-    token   = header.split(" ").last
+    token = header.split(" ").last
     decoded = JsonWebToken.decode(token)
     User.find_by(id: decoded[:user_id])
-  rescue StandardError
+  rescue
     nil
   end
 
