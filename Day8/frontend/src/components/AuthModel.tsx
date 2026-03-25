@@ -18,6 +18,22 @@ interface Props {
   tabOption: string;
 }
 
+interface SignInResponse {
+  signIn: {
+    token: string;
+    user: { id: string; name: string; email: string };
+    errors: string[];
+  };
+}
+
+interface SignUpResponse {
+  signUp: {
+    token: string;
+    user: { id: string; name: string; email: string };
+    errors: string[];
+  };
+}
+
 function AuthModal({ onClose, tabOption }: Props) {
   const { login } = useAuth();
   const [tab, setTab] = useState<String>(tabOption);
@@ -30,7 +46,7 @@ function AuthModal({ onClose, tabOption }: Props) {
   const [signUpPassword, setSignUpPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
-  const [signIn, { loading: signInLoading }] = useMutation(SIGN_IN, {
+  const [signIn, { loading: signInLoading }] = useMutation<SignInResponse>(SIGN_IN, {
     onCompleted: (data) => {
       if (data.signIn.errors.length > 0) {
         setError(data.signIn.errors[0]);
@@ -42,7 +58,7 @@ function AuthModal({ onClose, tabOption }: Props) {
     onError: (err) => setError(err.message),
   });
 
-  const [signUp, { loading: signUpLoading }] = useMutation(SIGN_UP, {
+  const [signUp, { loading: signUpLoading }] = useMutation<SignUpResponse>(SIGN_UP, {
     onCompleted: (data) => {
       if (data.signUp.errors.length > 0) {
         setError(data.signUp.errors[0]);
