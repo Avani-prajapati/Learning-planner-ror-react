@@ -50,7 +50,7 @@ function App() {
         {error && (
           <Box className="bg-red-50 border border-red-200 rounded-xl p-6 text-center shadow-sm">
             <Text color="red.500" fontWeight="medium">
-              ❌ {error.message}
+              {error.message}
             </Text>
           </Box>
         )}
@@ -61,7 +61,6 @@ function App() {
             py={20}
             className="bg-white rounded-2xl shadow-sm border border-gray-200"
           >
-            <Text fontSize="3xl">📭</Text>
             <Text className="text-gray-600 font-medium">
               No posts available
             </Text>

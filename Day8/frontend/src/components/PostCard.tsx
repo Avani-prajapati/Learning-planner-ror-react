@@ -28,17 +28,6 @@ function PostCard({ post }: Props) {
       position="relative"
       height="100%"
     >
-      <Box
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        height="3px"
-        bgGradient="linear(to-r, blue.400, purple.500)"
-        opacity={0.6}
-        transition="opacity 0.3s"
-        _hover={{ opacity: 1 }}
-      />
       
       <VStack align="stretch" p={6} gap={3}>
         <Text
