@@ -14,7 +14,7 @@ import { type Post } from "./types";
 import PostCard from "./components/PostCard";
 import PostDetail from "./components/PostDetail";
 import { useState } from "react";
-import CreatePostForm from "./components/AddPostForm";
+import CreatePostForm from "./components/CreatePostForm";
 
 interface GetAllPostsQuery {
 	posts: Post[];

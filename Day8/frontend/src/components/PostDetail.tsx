@@ -13,7 +13,7 @@ import {
 import { PostContext } from "../contexts/PostContext";
 import { GET_POST } from "../graphql/queries";
 import { type Post } from "../types";
-import AddCommentForm from "./AddCommentForm";
+import AddCommentForm from "./CreateCommentForm";
 
 interface GetPostQuery {
 	post: Post;

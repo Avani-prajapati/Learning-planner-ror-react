@@ -12,7 +12,7 @@ interface createCommentResponse {
 	};
 }
 
-function AddCommentForm() {
+function CreateCommentForm() {
 	const { selectedPost } = useContext(PostContext);
 	const [body, setBody] = useState("");
 	const [error, setError] = useState("");
@@ -78,4 +78,4 @@ function AddCommentForm() {
 	);
 }
 
-export default AddCommentForm;
+export default CreateCommentForm;
