@@ -65,3 +65,8 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "graphql"
+gem "jwt"
+gem "rack-cors"
+gem "graphiql-rails", group: :development
