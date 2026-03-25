@@ -22,10 +22,17 @@ module Types
     # They will be entry points for queries on your schema.
 
     # TODO: remove me
-    field :test_field, String, null: false,
-      description: "An example field added by the generator"
-    def test_field
-      "Hello World!"
+    description "The query root of this schema"
+
+    field :articles, resolver: Resolvers::ArticlesResolver
+    field :article,  resolver: Resolvers::ArticleResolver
+    field :tags,     resolver: Resolvers::TagsResolver
+
+    field :me, Types::UserType, null: true,
+      description: "The currently logged in user"
+
+    def me
+      context[:current_user]
     end
   end
 end
