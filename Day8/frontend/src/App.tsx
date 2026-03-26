@@ -48,13 +48,13 @@ function App() {
         <Container maxW="6xl" py={6}>
           <HStack align="start" className="justify-between">
             <Heading size="lg" className="text-gray-800">
-              Articles Dashboard
+              Blogger
             </Heading>
             <HStack gap={3}>
               {isAuthenticated ? (
                 <>
                   <Text fontSize="sm" color="gray.600">
-                    👋 {user?.name}
+                     {user?.name}
                   </Text>
                   <Button variant="outline" colorScheme="red" onClick={logout}>
                     Logout

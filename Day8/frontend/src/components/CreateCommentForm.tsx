@@ -72,7 +72,7 @@ function CreateCommentForm() {
           size="sm"
           borderRadius="xl"
         >
-          Article Comment
+          Add Comment
         </Button>
       </div>
     </Box>
