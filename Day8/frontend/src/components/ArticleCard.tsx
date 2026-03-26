@@ -15,6 +15,15 @@ function ArticleCard({ Article }: Props) {
   const { selectArticle } = useContext(ArticleContext);
   const { user, isAuthenticated } = useAuth();
 
+  const tagCount = Article.tags?.length ?? 0;
+  const tags = Article.tags ?? [];
+  const maxTagsToShow = 5;
+  const displayedTags = tags.slice(0, maxTagsToShow);
+  const remainingTagsCount = Math.max(0, tagCount - displayedTags.length);
+
+  const bodyLineClamp = 3;
+  const bodyMinHeightEm = bodyLineClamp * 1.5; 
+
   const [deleteArticle] = useMutation(DELETE_ARTICLE, {
     refetchQueries: [{ query: GET_ALL_ARTICLES, variables: { tagId: null } }],
   });
@@ -43,8 +52,9 @@ function ArticleCard({ Article }: Props) {
       }}
       position="relative"
       height="100%"
+      className="justify-between"
     >
-      <VStack align="stretch" p={6} gap={3}>
+      <VStack align="stretch" p={6} gap={3} h="100%">
         <HStack justify="space-between" align="start">
           <Text
             fontSize="lg"
@@ -64,15 +74,46 @@ function ArticleCard({ Article }: Props) {
               variant="ghost"
               onClick={handleDelete}
               borderRadius="lg"
+              aria-label="Delete article"
+              title="Delete article"
             >
-              X
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+              </svg>
             </Button>
           )}
         </HStack>
 
-        <Text fontSize="sm" color="gray.600" lineHeight="relaxed" mb={2}>
-          {Article.body}
-        </Text>
+        <Box flex="1" minH="0">
+          <Text
+            fontSize="sm"
+            color="gray.600"
+            lineHeight="1.5"
+            minH={`${bodyMinHeightEm}em`}
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: bodyLineClamp,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {Article.body}
+          </Text>
+        </Box>
 
         <HStack
           justify="space-between"
@@ -81,32 +122,67 @@ function ArticleCard({ Article }: Props) {
           borderTopWidth="1px"
           borderTopColor="gray.100"
         >
-          <Badge
-            colorScheme="blue"
-            variant="subtle"
-            px={3}
-            py={1}
-            borderRadius="full"
-            fontSize="xs"
-            fontWeight="medium"
-            display="flex"
-            alignItems="center"
-          >
-            <Box as="span" mr={1}>
-              💬
-            </Box>
-            {Article.comments?.length ?? 0} comments
-          </Badge>
+          <HStack gap={2} align="center" flexWrap="wrap">
+            <Badge
+              colorScheme="blue"
+              variant="subtle"
+              px={3}
+              py={1}
+              borderRadius="full"
+              fontSize="xs"
+              fontWeight="medium"
+              display="flex"
+              alignItems="center"
+            >
+              <Box as="span" mr={1}>
+                💬
+              </Box>
+              {Article.comments?.length ?? 0} comments
+            </Badge>
 
-          <Text
-            fontSize="xs"
-            fontWeight="medium"
-            color="gray.400"
-            transition="all 0.2s"
-            _hover={{ color: "blue.500", transform: "translateX(4px)" }}
-          >
-            View details →
-          </Text>
+            {tagCount > 0 && (
+              <HStack gap={2} flexWrap="wrap">
+                {displayedTags.map((tag) => (
+                  <Badge
+                    key={tag.id}
+                    colorScheme="green"
+                    variant="subtle"
+                    px={3}
+                    py={1}
+                    borderRadius="full"
+                    fontSize="xs"
+                    fontWeight="medium"
+                    display="flex"
+                    alignItems="center"
+                    title={tag.name}
+                  >
+                    <Box as="span" mr={1}>
+                      🏷️
+                    </Box>
+                    {tag.name}
+                  </Badge>
+                ))}
+
+                {remainingTagsCount > 0 && (
+                  <Badge
+                    colorScheme="green"
+                    variant="subtle"
+                    px={3}
+                    py={1}
+                    borderRadius="full"
+                    fontSize="xs"
+                    fontWeight="medium"
+                    display="flex"
+                    alignItems="center"
+                    title={`${remainingTagsCount} more tags`}
+                  >
+                    +{remainingTagsCount} more
+                  </Badge>
+                )}
+              </HStack>
+            )}
+          </HStack>
+
         </HStack>
       </VStack>
     </Box>
