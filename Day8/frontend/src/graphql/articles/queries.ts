@@ -7,6 +7,8 @@ export const GET_ALL_ARTICLES = gql`
       title
       body
       status
+      articleType
+      videoUrl
       createdAt
       user {
         id
@@ -30,6 +32,8 @@ export const GET_ARTICLE = gql`
       title
       body
       status
+      articleType
+      videoUrl
       createdAt
       user {
         id

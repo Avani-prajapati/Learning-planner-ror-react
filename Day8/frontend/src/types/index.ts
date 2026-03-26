@@ -26,12 +26,14 @@ export interface Comment {
 }
 
 export interface Article {
-  id: string;
-  title: string;
-  body: string;
-  status: string;
-  createdAt: string;
-  user: User;
-  comments: Comment[];
-  tags: Tag[];
+    id: string;
+    title: string;
+    body: string | null;
+    status: string;
+    articleType: string;
+    videoUrl: string | null;
+    createdAt: string;
+    user: User;
+    comments: Comment[];
+    tags: Tag[];
 }
