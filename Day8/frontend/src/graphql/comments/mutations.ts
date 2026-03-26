@@ -11,3 +11,12 @@ export const CREATE_COMMENT = gql`
     }
   }
 `;
+
+export const DELETE_COMMENT = gql`
+  mutation DeleteComment($id: ID!) {
+    deleteComment(input: { id: $id }) {
+      success
+      errors
+    }
+  }
+`
