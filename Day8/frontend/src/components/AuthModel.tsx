@@ -46,29 +46,35 @@ function AuthModal({ onClose, tabOption }: Props) {
   const [signUpPassword, setSignUpPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
-  const [signIn, { loading: signInLoading }] = useMutation<SignInResponse>(SIGN_IN, {
-    onCompleted: (data) => {
-      if (data.signIn.errors.length > 0) {
-        setError(data.signIn.errors[0]);
-      } else {
-        login(data.signIn.token, data.signIn.user);
-        onClose();
-      }
+  const [signIn, { loading: signInLoading }] = useMutation<SignInResponse>(
+    SIGN_IN,
+    {
+      onCompleted: (data) => {
+        if (data.signIn.errors.length > 0) {
+          setError(data.signIn.errors[0]);
+        } else {
+          login(data.signIn.token, data.signIn.user);
+          onClose();
+        }
+      },
+      onError: (err) => setError(err.message),
     },
-    onError: (err) => setError(err.message),
-  });
+  );
 
-  const [signUp, { loading: signUpLoading }] = useMutation<SignUpResponse>(SIGN_UP, {
-    onCompleted: (data) => {
-      if (data.signUp.errors.length > 0) {
-        setError(data.signUp.errors[0]);
-      } else {
-        login(data.signUp.token, data.signUp.user);
-        onClose();
-      }
+  const [signUp, { loading: signUpLoading }] = useMutation<SignUpResponse>(
+    SIGN_UP,
+    {
+      onCompleted: (data) => {
+        if (data.signUp.errors.length > 0) {
+          setError(data.signUp.errors[0]);
+        } else {
+          login(data.signUp.token, data.signUp.user);
+          onClose();
+        }
+      },
+      onError: (err) => setError(err.message),
     },
-    onError: (err) => setError(err.message),
-  });
+  );
 
   const handleSignIn = () => {
     if (!email || !password) {

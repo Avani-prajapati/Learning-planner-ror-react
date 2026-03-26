@@ -9,7 +9,7 @@ import {
   Container,
   Button,
 } from "@chakra-ui/react";
-import { GET_ALL_ARTICLES} from "./graphql/articles/queries";
+import { GET_ALL_ARTICLES } from "./graphql/articles/queries";
 import { GET_TAGS } from "./graphql/tags/queries";
 import { type Article, type Tag } from "./types";
 import ArticleCard from "./components/ArticleCard";
@@ -24,14 +24,12 @@ interface GetAllArticlesQuery {
 }
 
 interface GetAllTagsQuery {
-  tags: Tag[]
+  tags: Tag[];
 }
 
 function App() {
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-  const {data:tagsData} = useQuery<GetAllTagsQuery>(
-    GET_TAGS
-  )
+  const { data: tagsData } = useQuery<GetAllTagsQuery>(GET_TAGS);
   const { data, loading, error, refetch } = useQuery<GetAllArticlesQuery>(
     GET_ALL_ARTICLES,
     {
@@ -43,9 +41,9 @@ function App() {
   const { isAuthenticated, user, logout } = useAuth();
   const [tabOption, setTabOption] = useState("");
 
-  useEffect(()=>{
-   refetch
-  },[selectedTagId])
+  useEffect(() => {
+    refetch;
+  }, [selectedTagId]);
 
   function handleModal(tab: string) {
     setShowAuthModal(true);
@@ -64,7 +62,7 @@ function App() {
               {isAuthenticated ? (
                 <>
                   <Text fontSize="sm" color="gray.600">
-                     {user?.name}
+                    {user?.name}
                   </Text>
                   <Button variant="outline" colorScheme="red" onClick={logout}>
                     Logout
@@ -118,16 +116,16 @@ function App() {
                 All
               </Button>
               {tagsData?.tags.map((tag) => (
-                  <Button
-                    key={tag.id}
-                    size="sm"
-                    borderRadius="full"
-                    colorScheme={selectedTagId === tag.id ? "blue" : "gray"}
-                    onClick={() => setSelectedTagId(tag.id)}
-                  >
-                    {tag.name}
-                  </Button>
-                ))}
+                <Button
+                  key={tag.id}
+                  size="sm"
+                  borderRadius="full"
+                  colorScheme={selectedTagId === tag.id ? "blue" : "gray"}
+                  onClick={() => setSelectedTagId(tag.id)}
+                >
+                  {tag.name}
+                </Button>
+              ))}
             </HStack>
             <Button
               colorScheme={"blue"}
