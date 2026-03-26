@@ -8,13 +8,15 @@ import {
   HStack,
   Container,
   Button,
+  Select,
+  createListCollection,
 } from "@chakra-ui/react";
 import { GET_ALL_ARTICLES } from "./graphql/articles/queries";
 import { GET_TAGS } from "./graphql/tags/queries";
 import { type Article, type Tag } from "./types";
 import ArticleCard from "./components/ArticleCard";
 import ArticleDetail from "./components/ArticleDetail";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import CreateArticleForm from "./components/CreateArticleForm";
 import { useAuth } from "./contexts/AuthContext";
 import AuthModal from "./components/AuthModel";
@@ -27,9 +29,82 @@ interface GetAllTagsQuery {
   tags: Tag[];
 }
 
+const articleTypeCollection = createListCollection({
+  items: [
+    { value: "text", label: "Text Only" },
+    { value: "video", label: "Video Only" },
+  ],
+});
+
+function useArticleFilter({
+  articles,
+  isMyView,
+  currentUserId,
+  selectedTagId,
+  selectedArticleType,
+}: {
+  articles: Article[] | undefined;
+  isMyView: boolean;
+  currentUserId?: string;
+  selectedTagId: string | null;
+  selectedArticleType: string | null;
+}) {
+  return useMemo(() => {
+    if (!articles) return [];
+
+    let filtered = [...articles];
+
+    if (isMyView && currentUserId) {
+      filtered = filtered.filter((article) => article.user.id === currentUserId);
+    }
+
+    if (selectedTagId) {
+      filtered = filtered.filter((article) =>
+        article.tags?.some((tag) => tag.id === selectedTagId)
+      );
+    }
+
+    if (selectedArticleType) {
+      filtered = filtered.filter(
+        (article) => article.articleType === selectedArticleType
+      );
+    }
+
+    return filtered;
+  }, [articles, isMyView, currentUserId, selectedTagId, selectedArticleType]);
+}
+
+function EmptyState({ 
+  isMyView, 
+  selectedArticleType 
+}: { 
+  isMyView: boolean; 
+  selectedArticleType: string | null;
+}) {
+  const getMessage = () => {
+    if (selectedArticleType) {
+      return `No ${selectedArticleType === 'text' ? 'text' : 'video'} articles available`;
+    }
+    if (isMyView) {
+      return "No your articles available";
+    }
+    return "No Articles available";
+  };
+
+  return (
+    <VStack gap={4} py={20} className="bg-white rounded-2xl shadow-sm border border-gray-200">
+      <Text className="text-gray-600 font-medium">{getMessage()}</Text>
+      <Text className="text-gray-400 text-sm">
+        Start by creating your first Article 🚀
+      </Text>
+    </VStack>
+  );
+}
+
 function App() {
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
   const [showMyArticlesOnly, setShowMyArticlesOnly] = useState(false);
+  const [selectedArticleType, setSelectedArticleType] = useState<string | null>(null);
   const { data: tagsData } = useQuery<GetAllTagsQuery>(GET_TAGS);
   const { data, loading, error } = useQuery<GetAllArticlesQuery>(
     GET_ALL_ARTICLES,
@@ -43,16 +118,30 @@ function App() {
   const [tabOption, setTabOption] = useState("");
 
   const isMyView = showMyArticlesOnly && isAuthenticated;
-  const articlesToShow = data
-    ? isMyView
-      ? data.articles.filter((a) => a.user.id === user?.id)
-      : data.articles
-    : [];
+  
+  const filteredArticles = useArticleFilter({
+    articles: data?.articles,
+    isMyView,
+    currentUserId: user?.id,
+    selectedTagId,
+    selectedArticleType,
+  });
 
   function handleModal(tab: string) {
     setShowAuthModal(true);
     setTabOption(tab);
   }
+
+  const handleTagSelect = (tagId: string | null) => {
+    setSelectedTagId(tagId);
+    setShowMyArticlesOnly(false);
+  };
+
+  const handleMyArticlesToggle = () => {
+    setShowMyArticlesOnly(!showMyArticlesOnly);
+    setSelectedTagId(null);
+    setSelectedArticleType(null);
+  };
 
   return (
     <Box className="min-h-screen bg-linear-to-br from-gray-50 to-gray-200">
@@ -108,6 +197,7 @@ function App() {
             </Text>
           </Box>
         )}
+        
         {data && (
           <HStack className=" justify-between" pb={3}>
             <HStack gap={2} flexWrap="wrap">
@@ -118,12 +208,9 @@ function App() {
                   selectedTagId === null && !isMyView ? "solid" : "outline"
                 }
                 colorPalette={
-                  selectedTagId === null && !isMyView ? "blue" : "white"
+                  selectedTagId === null && !isMyView ? "blue" : "gray"
                 }
-                onClick={() => {
-                  setSelectedTagId(null);
-                  setShowMyArticlesOnly(false);
-                }}
+                onClick={() => handleTagSelect(null)}
               >
                 All
               </Button>
@@ -136,10 +223,7 @@ function App() {
                     selectedTagId === tag.id && !isMyView ? "solid" : "outline"
                   }
                   colorPalette={selectedTagId === tag.id ? "blue" : "gray"}
-                  onClick={() => {
-                    setSelectedTagId(tag.id);
-                    setShowMyArticlesOnly(false);
-                  }}
+                  onClick={() => handleTagSelect(tag.id)}
                 >
                   {tag.name}
                 </Button>
@@ -150,14 +234,42 @@ function App() {
                   borderRadius="full"
                   variant={showMyArticlesOnly ? "solid" : "outline"}
                   colorPalette={showMyArticlesOnly ? "blue" : "gray"}
-                  onClick={() => {
-                    setShowMyArticlesOnly(true);
-                    setSelectedTagId(null);
-                  }}
+                  onClick={handleMyArticlesToggle}
                 >
                   My Articles
                 </Button>
               )}
+              
+              <Select.Root
+                collection={articleTypeCollection}
+                value={selectedArticleType ? [selectedArticleType] : []}
+                onValueChange={(e) => {
+                  setSelectedArticleType(e.value[0] || null);
+                  setShowMyArticlesOnly(false);
+                  setSelectedTagId(null);
+                }}
+                size="sm"
+                width="220px"
+              >
+                <Select.Control>
+                  <Select.Trigger>
+                    <Select.ValueText placeholder="All Types" />
+                  </Select.Trigger>
+                  <Select.IndicatorGroup>
+                    <Select.Indicator />
+                    <Select.ClearTrigger />
+                  </Select.IndicatorGroup>
+                </Select.Control>
+                <Select.Positioner>
+                  <Select.Content>
+                    {articleTypeCollection.items.map((item) => (
+                      <Select.Item key={item.value} item={item.value}>
+                        {item.label}
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Positioner>
+              </Select.Root>
             </HStack>
             {isAuthenticated && (
               <HStack>
@@ -172,26 +284,15 @@ function App() {
             )}
           </HStack>
         )}
-        {data && articlesToShow.length === 0 && (
-          <VStack
-            gap={4}
-            py={20}
-            className="bg-white rounded-2xl shadow-sm border border-gray-200"
-          >
-            <Text className="text-gray-600 font-medium">
-              {isMyView
-                ? "No your articles available"
-                : "No Articles available"}
-            </Text>
-            <Text className="text-gray-400 text-sm">
-              Start by creating your first Article 🚀
-            </Text>
-          </VStack>
-        )}
-
-        {data && articlesToShow.length > 0 && (
+        
+        {data && filteredArticles.length === 0 ? (
+          <EmptyState 
+            isMyView={isMyView} 
+            selectedArticleType={selectedArticleType} 
+          />
+        ) : data && filteredArticles.length > 0 ? (
           <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articlesToShow.map((article) => (
+            {filteredArticles.map((article) => (
               <Box
                 key={article.id}
                 className="transform transition duration-300 hover:scale-[1.02]"
@@ -200,21 +301,21 @@ function App() {
               </Box>
             ))}
           </Box>
-        )}
+        ) : null}
       </Container>
 
       <ArticleDetail />
       {showCreateForm && (
         <CreateArticleForm
           onClose={() => setShowCreateForm(false)}
-        ></CreateArticleForm>
+        />
       )}
 
       {showAuthModal && (
         <AuthModal
           onClose={() => setShowAuthModal(false)}
           tabOption={tabOption}
-        ></AuthModal>
+        />
       )}
     </Box>
   );
