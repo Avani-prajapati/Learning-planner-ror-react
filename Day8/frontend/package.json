@@ -16,12 +16,15 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@tailwindcss/vite": "^4.2.2",
+    "@types/apollo-upload-client": "^19.0.0",
+    "@types/video.js": "^7.3.58",
     "apollo-upload-client": "^19.0.0",
     "graphql": "^16.13.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "rxjs": "^7.8.2",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "video.js": "^8.23.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

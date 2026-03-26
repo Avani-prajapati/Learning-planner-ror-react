@@ -35,6 +35,8 @@ function CreateArticleForm({ onClose }: Props) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
+  const [articleType, setArticleType] = useState<"text"|"video">("text")
+  const [videoFile, setVideoFile] = useState<File|null>(null);
   const { data: tagsData } = useQuery<TagsQuery>(GET_TAGS);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
@@ -63,16 +65,28 @@ function CreateArticleForm({ onClose }: Props) {
   );
 
   const handleSubmit = () => {
-    if (!title.trim() || !body.trim()) {
-      setError("Title and body are required.");
+    if (!title.trim()) {
+      setError("Title is required.");
+      return;
+    }
+    console.log(videoFile instanceof File)
+    console.log(videoFile)
+    if (articleType === "text" && !body.trim()) {
+      setError("Body is required for text articles.");
+      return;
+    }
+    if (articleType === "video" && !videoFile) {
+      setError("Video file is required for video articles.");
       return;
     }
     createArticle({
       variables: {
         title: title.trim(),
-        body: body.trim(),
+        body: articleType === "text" ? body.trim() : null,
         status: "public",
+        articleType,
         tagIds: selectedTagIds,
+        video: articleType === "video" ? videoFile : null,
       },
     });
   };
@@ -114,20 +128,6 @@ function CreateArticleForm({ onClose }: Props) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               borderRadius="xl"
-            />
-          </Box>
-
-          <Box>
-            <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
-              Body
-            </Text>
-            <Textarea
-              placeholder="Write your Article content..."
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              rows={5}
-              borderRadius="xl"
-              resize="none"
             />
           </Box>
 
@@ -189,6 +189,66 @@ function CreateArticleForm({ onClose }: Props) {
             </Text>
           )}
 
+          <Box>
+            <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
+              Article Type
+            </Text>
+            <HStack gap={2}>
+              <Button
+                size="sm"
+                borderRadius="xl"
+                colorScheme={articleType === "text" ? "blue" : "gray"}
+                onClick={() => { setArticleType("text"); setVideoFile(null); setError(""); }}
+              >
+                Text
+              </Button>
+              <Button
+                size="sm"
+                borderRadius="xl"
+                colorScheme={articleType === "video" ? "blue" : "gray"}
+                onClick={() => { setArticleType("video"); setBody(""); setError(""); }}
+              >
+                Video
+              </Button>
+            </HStack>
+          </Box>
+
+          {articleType === "text" && (
+            <Box>
+              <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
+                Body
+              </Text>
+              <Textarea
+                placeholder="Write your Article content..."
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                rows={5}
+                borderRadius="xl"
+                resize="none"
+              />
+            </Box>
+          )}
+
+          {articleType === "video" && (
+            <Box>
+              <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
+                Video File
+              </Text>
+              <Input
+                type="file"
+                accept="video/mp4,video/webm,video/ogg"
+                borderRadius="xl"
+                p={1}
+                onChange={(e) => setVideoFile(e.target.files?.[0] ?? null)}
+              />
+              {videoFile && (
+                <Text fontSize="xs" color="gray.500" mt={1}>
+                  Selected: {videoFile.name}
+                </Text>
+              )}
+            </Box>
+          )}
+
           <Box display="flex" justifyContent="flex-end" gap={3}>
             <Button variant="ghost" borderRadius="xl" onClick={onClose}>
               Cancel
@@ -198,7 +258,6 @@ function CreateArticleForm({ onClose }: Props) {
               borderRadius="xl"
               onClick={handleSubmit}
               loading={loading}
-              disabled={!title.trim() || !body.trim()}
             >
               Create Article
             </Button>

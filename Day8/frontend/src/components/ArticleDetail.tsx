@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef, useEffect } from "react";
 import { useQuery } from "@apollo/client/react";
 import {
   Box,
@@ -10,6 +10,8 @@ import {
   HStack,
   Button,
 } from "@chakra-ui/react";
+import videojs from "video.js";
+import "video.js/dist/video-js.css"
 import { ArticleContext } from "../contexts/ArticleContext";
 import { GET_ARTICLE } from "../graphql/articles/queries";
 import { type Article } from "../types";
@@ -19,6 +21,35 @@ import CommentCard from "./CommentCard";
 
 interface GetArticleQuery {
   article: Article;
+}
+
+
+function VideoPlayer({ src }: { src: string }) {
+  const videoRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<ReturnType<typeof videojs> | null>(null);
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    const videoElement = document.createElement("video-js");
+    videoElement.classList.add("vjs-big-play-centered");
+    videoRef.current.appendChild(videoElement);
+
+    playerRef.current = videojs(videoElement, {
+      controls: true,
+      fluid: true,
+      sources: [{ src, type: "video/mp4" }],
+    });
+
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+    };
+  }, [src]);
+
+  return <div ref={videoRef} />;
 }
 
 function ArticleDetail() {
@@ -84,9 +115,15 @@ function ArticleDetail() {
                 <Badge colorScheme="blue">Article #{data.article.id}</Badge>
               </Box>
 
-              <Box bg="gray.50" p={4} borderRadius="md">
-                <Text>{data.article.body}</Text>
-              </Box>
+              {data.article.articleType === "video" && data.article.videoUrl ? (
+                <Box borderRadius="md" overflow="hidden">
+                  <VideoPlayer src={data.article.videoUrl} />
+                </Box>
+              ) : (
+                <Box bg="gray.50" p={4} borderRadius="md">
+                  <Text>{data.article.body}</Text>
+                </Box>
+              )}
 
               <Box>
                 <HStack justify="space-between" mb={3}>
