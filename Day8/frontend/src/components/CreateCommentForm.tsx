@@ -4,7 +4,7 @@ import { Box, Button, Textarea, Text } from "@chakra-ui/react";
 import { GET_ARTICLE } from "../graphql/articles/queries";
 import { ArticleContext } from "../contexts/ArticleContext";
 import type { Comment } from "../types";
-import { CREATE_COMMENT } from "../graphql/mutations";
+import { CREATE_COMMENT } from "../graphql/comments/mutations";
 
 interface createCommentResponse {
   createComment: {

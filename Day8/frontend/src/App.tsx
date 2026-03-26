@@ -10,7 +10,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { GET_ALL_ARTICLES} from "./graphql/articles/queries";
-import { GET_TAGS } from "./graphql/queries";
+import { GET_TAGS } from "./graphql/tags/queries";
 import { type Article, type Tag } from "./types";
 import ArticleCard from "./components/ArticleCard";
 import ArticleDetail from "./components/ArticleDetail";

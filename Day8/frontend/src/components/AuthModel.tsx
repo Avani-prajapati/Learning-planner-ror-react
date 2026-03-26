@@ -10,7 +10,7 @@ import {
   HStack,
   Link,
 } from "@chakra-ui/react";
-import { SIGN_IN, SIGN_UP } from "../graphql/mutations";
+import { SIGN_IN, SIGN_UP } from "../graphql/auth/mutations";
 import { useAuth } from "../contexts/AuthContext";
 
 interface Props {

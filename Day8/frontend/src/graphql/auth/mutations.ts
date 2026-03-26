@@ -1,17 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_COMMENT = gql`
-  mutation CreateComment($articleId: ID!, $body: String!) {
-    createComment(input: { articleId: $articleId, body: $body }) {
-      comment {
-        id
-        body
-      }
-      errors
-    }
-  }
-`;
-
 export const SIGN_IN = gql`
   mutation SignIn($email: String!, $password: String!) {
     signIn(input: { email: $email, password: $password }) {
