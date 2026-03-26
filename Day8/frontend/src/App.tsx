@@ -14,7 +14,7 @@ import { GET_TAGS } from "./graphql/tags/queries";
 import { type Article, type Tag } from "./types";
 import ArticleCard from "./components/ArticleCard";
 import ArticleDetail from "./components/ArticleDetail";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CreateArticleForm from "./components/CreateArticleForm";
 import { useAuth } from "./contexts/AuthContext";
 import AuthModal from "./components/AuthModel";
@@ -29,8 +29,9 @@ interface GetAllTagsQuery {
 
 function App() {
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
+  const [showMyArticlesOnly, setShowMyArticlesOnly] = useState(false);
   const { data: tagsData } = useQuery<GetAllTagsQuery>(GET_TAGS);
-  const { data, loading, error, refetch } = useQuery<GetAllArticlesQuery>(
+  const { data, loading, error } = useQuery<GetAllArticlesQuery>(
     GET_ALL_ARTICLES,
     {
       variables: { tagId: selectedTagId },
@@ -41,9 +42,13 @@ function App() {
   const { isAuthenticated, user, logout } = useAuth();
   const [tabOption, setTabOption] = useState("");
 
-  useEffect(() => {
-    refetch;
-  }, [selectedTagId]);
+  const isMyView = showMyArticlesOnly && isAuthenticated;
+  const articlesToShow = data
+    ? isMyView
+      ? data.articles.filter((a) => a.user.id === user?.id)
+      : data.articles
+    : [];
+
 
   function handleModal(tab: string) {
     setShowAuthModal(true);
@@ -110,9 +115,12 @@ function App() {
               <Button
                 size="sm"
                 borderRadius="full"
-                variant={selectedTagId === null? "solid":"outline"}
-                colorPalette={selectedTagId === null ? "blue" : "white"}
-                onClick={() => setSelectedTagId(null)}
+                variant={selectedTagId === null && !isMyView ? "solid" : "outline"}
+                colorPalette={selectedTagId === null && !isMyView ? "blue" : "white"}
+                onClick={() => {
+                  setSelectedTagId(null);
+                  setShowMyArticlesOnly(false);
+                }}
               >
                 All
               </Button>
@@ -121,31 +129,52 @@ function App() {
                   key={tag.id}
                   size="sm"
                   borderRadius="full"
-                  variant={selectedTagId === tag.id? "solid":"outline"}
+                  variant={selectedTagId === tag.id && !isMyView ? "solid" : "outline"}
                   colorPalette={selectedTagId === tag.id ? "blue" : "gray"}
-                  onClick={() => setSelectedTagId(tag.id)}
+                  onClick={() => {
+                    setSelectedTagId(tag.id);
+                    setShowMyArticlesOnly(false);
+                  }}
                 >
                   {tag.name}
                 </Button>
+                
               ))}
+              {isAuthenticated && <Button
+               size="sm"
+               borderRadius="full"
+               variant={showMyArticlesOnly ? "solid" : "outline"}
+               colorPalette={showMyArticlesOnly ? "blue" : "gray"}
+               
+              onClick={() => {
+                setShowMyArticlesOnly(true);
+                setSelectedTagId(null);
+              }}
+            >
+              My Articles
+            </Button>}
             </HStack>
-            {isAuthenticated && <Button
-              colorScheme={"blue"}
+            {isAuthenticated && 
+            (<HStack>
+            <Button
+              colorPalette={"gray"}
               onClick={() => setShowCreateForm(true)}
               mb={2}
             >
               Add Article
-            </Button>}
+            </Button>
+            </HStack>
+            )}
           </HStack>
         )}
-        {data && data.articles.length === 0 && (
+        {data && articlesToShow.length === 0 && (
           <VStack
             gap={4}
             py={20}
             className="bg-white rounded-2xl shadow-sm border border-gray-200"
           >
             <Text className="text-gray-600 font-medium">
-              No Articles available
+              {isMyView ? "No your articles available" : "No Articles available"}
             </Text>
             <Text className="text-gray-400 text-sm">
               Start by creating your first Article 🚀
@@ -153,9 +182,9 @@ function App() {
           </VStack>
         )}
 
-        {data && data.articles.length > 0 && (
+        {data && articlesToShow.length > 0 && (
           <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.articles.map((article) => (
+            {articlesToShow.map((article) => (
               <Box
                 key={article.id}
                 className="transform transition duration-300 hover:scale-[1.02]"
