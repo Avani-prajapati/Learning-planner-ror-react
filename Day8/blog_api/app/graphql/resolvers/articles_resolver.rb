@@ -7,7 +7,7 @@ module Resolvers
 
     def resolve(tag_id: nil)
       if tag_id.present?
-        Article.published.joins(:tags).where(tags: { id: tag_id })
+        Article.published.joins(:tags).where(tags: {id: tag_id})
       else
         Article.published
       end
