@@ -32,7 +32,13 @@ module Mutations
     
       if article.save
         article.tag_ids = tag_ids if tag_ids.any?
-        article.video.attach(video) if video.present?
+        if video.present?
+          article.video.attach(
+            io: video.tempfile,
+            filename: video.original_filename,
+            content_type: video.content_type
+          )
+        end 
         { article: article, errors: [] }
       else
         { article: nil, errors: article.errors.full_messages }
