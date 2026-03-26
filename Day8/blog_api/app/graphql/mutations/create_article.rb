@@ -12,24 +12,24 @@ module Mutations
     field :article, Types::ArticleType, null: true
     field :errors, [String], null: false
 
-    def resolve(title:, body: nil, status:, article_type:, tag_ids: [], video: nil)
-      return { article: nil, errors: ["Not authenticated"] } unless context[:current_user]
-    
+    def resolve(title:, status:, article_type:, body: nil, tag_ids: [], video: nil)
+      return {article: nil, errors: ["Not authenticated"]} unless context[:current_user]
+
       if article_type == "text" && body.blank?
-        return { article: nil, errors: ["Body is required for text articles"] }
+        return {article: nil, errors: ["Body is required for text articles"]}
       end
-    
+
       if article_type == "video" && video.nil?
-        return { article: nil, errors: ["Video file is required for video articles"] }
+        return {article: nil, errors: ["Video file is required for video articles"]}
       end
-    
+
       article = context[:current_user].articles.build(
         title: title,
         body: body,
         status: status,
         article_type: article_type
       )
-    
+
       if article.save
         article.tag_ids = tag_ids if tag_ids.any?
         if video.present?
@@ -38,10 +38,10 @@ module Mutations
             filename: video.original_filename,
             content_type: video.content_type
           )
-        end 
-        { article: article, errors: [] }
+        end
+        {article: article, errors: []}
       else
-        { article: nil, errors: article.errors.full_messages }
+        {article: nil, errors: article.errors.full_messages}
       end
     end
   end
