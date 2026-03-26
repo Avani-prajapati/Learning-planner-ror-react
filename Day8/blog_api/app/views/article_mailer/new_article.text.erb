@@ -1,0 +1,7 @@
+Hi <%= @recipient.name %>,
+
+<%= @article.user.name %> published: <%= @article.title %>
+
+<%= @article.body %>
+
+Read it: <%= article_url(@article) %>
