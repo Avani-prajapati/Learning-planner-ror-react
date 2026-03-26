@@ -9,11 +9,12 @@ import {
   Container,
   Button,
 } from "@chakra-ui/react";
-import { GET_ALL_ARTICLES } from "./graphql/queries";
-import { type Article } from "./types";
+import { GET_ALL_ARTICLES} from "./graphql/articles/queries";
+import { GET_TAGS } from "./graphql/queries";
+import { type Article, type Tag } from "./types";
 import ArticleCard from "./components/ArticleCard";
 import ArticleDetail from "./components/ArticleDetail";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreateArticleForm from "./components/CreateArticleForm";
 import { useAuth } from "./contexts/AuthContext";
 import AuthModal from "./components/AuthModel";
@@ -22,20 +23,29 @@ interface GetAllArticlesQuery {
   articles: Article[];
 }
 
+interface GetAllTagsQuery {
+  tags: Tag[]
+}
+
 function App() {
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-
-  const { data, loading, error } = useQuery<GetAllArticlesQuery>(
+  const {data:tagsData} = useQuery<GetAllTagsQuery>(
+    GET_TAGS
+  )
+  const { data, loading, error, refetch } = useQuery<GetAllArticlesQuery>(
     GET_ALL_ARTICLES,
     {
       variables: { tagId: selectedTagId },
     },
   );
-  // const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const [tabOption, setTabOption] = useState("");
+
+  useEffect(()=>{
+   refetch
+  },[selectedTagId])
 
   function handleModal(tab: string) {
     setShowAuthModal(true);
@@ -107,13 +117,7 @@ function App() {
               >
                 All
               </Button>
-              {data?.articles
-                .flatMap((a) => a.tags)
-                .filter(
-                  (tag, index, self) =>
-                    self.findIndex((t) => t.id === tag.id) === index,
-                )
-                .map((tag) => (
+              {tagsData?.tags.map((tag) => (
                   <Button
                     key={tag.id}
                     size="sm"

@@ -4,8 +4,8 @@ import { useMutation } from "@apollo/client/react";
 import { ArticleContext } from "../contexts/ArticleContext";
 import { useAuth } from "../contexts/AuthContext";
 import { type Article } from "../types";
-import { DELETE_ARTICLE } from "../graphql/mutations";
-import { GET_ALL_ARTICLES } from "../graphql/queries";
+import { DELETE_ARTICLE } from "../graphql/articles/mutation";
+import { GET_ALL_ARTICLES } from "../graphql/articles/queries";
 
 interface Props {
   Article: Article;

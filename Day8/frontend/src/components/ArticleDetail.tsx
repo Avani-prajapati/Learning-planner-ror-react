@@ -11,7 +11,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { ArticleContext } from "../contexts/ArticleContext";
-import { GET_ARTICLE } from "../graphql/queries";
+import { GET_ARTICLE } from "../graphql/articles/queries";
 import { type Article } from "../types";
 import AddCommentForm from "./CreateCommentForm";
 

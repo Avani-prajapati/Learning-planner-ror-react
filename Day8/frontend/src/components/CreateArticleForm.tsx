@@ -11,8 +11,9 @@ import {
   HStack,
   Menu,
 } from "@chakra-ui/react";
-import { GET_ALL_ARTICLES, GET_TAGS } from "../graphql/queries";
-import { CREATE_ARTICLE } from "../graphql/mutations";
+import { GET_ALL_ARTICLES} from "../graphql/articles/queries";
+import { GET_TAGS } from "../graphql/queries";
+import { CREATE_ARTICLE } from "../graphql/articles/mutation";
 import type { Article, Tag } from "../types";
 
 interface Props {

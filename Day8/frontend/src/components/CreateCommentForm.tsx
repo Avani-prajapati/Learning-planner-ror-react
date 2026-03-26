@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useMutation } from "@apollo/client/react";
 import { Box, Button, Textarea, Text } from "@chakra-ui/react";
-import { GET_ARTICLE } from "../graphql/queries";
+import { GET_ARTICLE } from "../graphql/articles/queries";
 import { ArticleContext } from "../contexts/ArticleContext";
 import type { Comment } from "../types";
 import { CREATE_COMMENT } from "../graphql/mutations";
