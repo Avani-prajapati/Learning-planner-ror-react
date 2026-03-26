@@ -77,6 +77,9 @@ GEM
       uri (>= 0.13.1)
     addressable (2.8.9)
       public_suffix (>= 2.0.2, < 8.0)
+    apollo_upload_server (2.1.5)
+      actionpack (>= 6.1.6)
+      graphql (>= 1.8)
     ast (2.4.3)
     base64 (0.3.0)
     bcrypt (3.1.22)
@@ -408,6 +411,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  apollo_upload_server (= 2.1.5)
   bcrypt (~> 3.1.7)
   bootsnap
   brakeman
