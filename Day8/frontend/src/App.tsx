@@ -55,18 +55,20 @@ function useArticleFilter({
     let filtered = [...articles];
 
     if (isMyView && currentUserId) {
-      filtered = filtered.filter((article) => article.user.id === currentUserId);
+      filtered = filtered.filter(
+        (article) => article.user.id === currentUserId,
+      );
     }
 
     if (selectedTagId) {
       filtered = filtered.filter((article) =>
-        article.tags?.some((tag) => tag.id === selectedTagId)
+        article.tags?.some((tag) => tag.id === selectedTagId),
       );
     }
 
     if (selectedArticleType) {
       filtered = filtered.filter(
-        (article) => article.articleType === selectedArticleType
+        (article) => article.articleType === selectedArticleType,
       );
     }
 
@@ -74,16 +76,16 @@ function useArticleFilter({
   }, [articles, isMyView, currentUserId, selectedTagId, selectedArticleType]);
 }
 
-function EmptyState({ 
-  isMyView, 
-  selectedArticleType 
-}: { 
-  isMyView: boolean; 
+function EmptyState({
+  isMyView,
+  selectedArticleType,
+}: {
+  isMyView: boolean;
   selectedArticleType: string | null;
 }) {
   const getMessage = () => {
     if (selectedArticleType) {
-      return `No ${selectedArticleType === 'text' ? 'text' : 'video'} articles available`;
+      return `No ${selectedArticleType === "text" ? "text" : "video"} articles available`;
     }
     if (isMyView) {
       return "No your articles available";
@@ -92,7 +94,11 @@ function EmptyState({
   };
 
   return (
-    <VStack gap={4} py={20} className="bg-white rounded-2xl shadow-sm border border-gray-200">
+    <VStack
+      gap={4}
+      py={20}
+      className="bg-white rounded-2xl shadow-sm border border-gray-200"
+    >
       <Text className="text-gray-600 font-medium">{getMessage()}</Text>
       <Text className="text-gray-400 text-sm">
         Start by creating your first Article 🚀
@@ -104,7 +110,9 @@ function EmptyState({
 function App() {
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
   const [showMyArticlesOnly, setShowMyArticlesOnly] = useState(false);
-  const [selectedArticleType, setSelectedArticleType] = useState<string | null>(null);
+  const [selectedArticleType, setSelectedArticleType] = useState<string | null>(
+    null,
+  );
   const { data: tagsData } = useQuery<GetAllTagsQuery>(GET_TAGS);
   const { data, loading, error } = useQuery<GetAllArticlesQuery>(
     GET_ALL_ARTICLES,
@@ -118,7 +126,7 @@ function App() {
   const [tabOption, setTabOption] = useState("");
 
   const isMyView = showMyArticlesOnly && isAuthenticated;
-  
+
   const filteredArticles = useArticleFilter({
     articles: data?.articles,
     isMyView,
@@ -197,7 +205,7 @@ function App() {
             </Text>
           </Box>
         )}
-        
+
         {data && (
           <HStack className=" justify-between" pb={3}>
             <HStack gap={2} flexWrap="wrap">
@@ -239,7 +247,7 @@ function App() {
                   My Articles
                 </Button>
               )}
-              
+
               <Select.Root
                 collection={articleTypeCollection}
                 value={selectedArticleType ? [selectedArticleType] : []}
@@ -284,11 +292,11 @@ function App() {
             )}
           </HStack>
         )}
-        
+
         {data && filteredArticles.length === 0 ? (
-          <EmptyState 
-            isMyView={isMyView} 
-            selectedArticleType={selectedArticleType} 
+          <EmptyState
+            isMyView={isMyView}
+            selectedArticleType={selectedArticleType}
           />
         ) : data && filteredArticles.length > 0 ? (
           <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -306,9 +314,7 @@ function App() {
 
       <ArticleDetail />
       {showCreateForm && (
-        <CreateArticleForm
-          onClose={() => setShowCreateForm(false)}
-        />
+        <CreateArticleForm onClose={() => setShowCreateForm(false)} />
       )}
 
       {showAuthModal && (

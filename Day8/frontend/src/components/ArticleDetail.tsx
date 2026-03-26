@@ -1,4 +1,4 @@
-import { useContext, useRef, useEffect } from "react";
+import { useContext } from "react";
 import { useQuery } from "@apollo/client/react";
 import {
   Box,
@@ -10,7 +10,7 @@ import {
   HStack,
   Button,
 } from "@chakra-ui/react";
-import "video.js/dist/video-js.css"
+import "video.js/dist/video-js.css";
 import VideoPlayer from "./VideoPlayer";
 import { ArticleContext } from "../contexts/ArticleContext";
 import { GET_ARTICLE } from "../graphql/articles/queries";
@@ -22,7 +22,6 @@ import CommentCard from "./CommentCard";
 interface GetArticleQuery {
   article: Article;
 }
-
 
 function ArticleDetail() {
   const { selectedArticle, isDetailOpen, closeDetail } =

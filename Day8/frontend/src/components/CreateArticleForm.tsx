@@ -35,8 +35,8 @@ function CreateArticleForm({ onClose }: Props) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
-  const [articleType, setArticleType] = useState<"text"|"video">("text")
-  const [videoFile, setVideoFile] = useState<File|null>(null);
+  const [articleType, setArticleType] = useState<"text" | "video">("text");
+  const [videoFile, setVideoFile] = useState<File | null>(null);
   const { data: tagsData } = useQuery<TagsQuery>(GET_TAGS);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
@@ -69,8 +69,8 @@ function CreateArticleForm({ onClose }: Props) {
       setError("Title is required.");
       return;
     }
-    console.log(videoFile instanceof File)
-    console.log(videoFile)
+    console.log(videoFile instanceof File);
+    console.log(videoFile);
     if (articleType === "text" && !body.trim()) {
       setError("Body is required for text articles.");
       return;
@@ -198,7 +198,11 @@ function CreateArticleForm({ onClose }: Props) {
                 size="sm"
                 borderRadius="xl"
                 colorScheme={articleType === "text" ? "blue" : "gray"}
-                onClick={() => { setArticleType("text"); setVideoFile(null); setError(""); }}
+                onClick={() => {
+                  setArticleType("text");
+                  setVideoFile(null);
+                  setError("");
+                }}
               >
                 Text
               </Button>
@@ -206,7 +210,11 @@ function CreateArticleForm({ onClose }: Props) {
                 size="sm"
                 borderRadius="xl"
                 colorScheme={articleType === "video" ? "blue" : "gray"}
-                onClick={() => { setArticleType("video"); setBody(""); setError(""); }}
+                onClick={() => {
+                  setArticleType("video");
+                  setBody("");
+                  setError("");
+                }}
               >
                 Video
               </Button>

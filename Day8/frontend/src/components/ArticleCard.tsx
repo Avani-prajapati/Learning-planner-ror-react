@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import {
   Box,
   Text,
@@ -200,7 +200,6 @@ function ArticleCard({ Article }: Props) {
         </VStack>
       </Box>
 
-      {/* Video Dialog */}
       <Dialog.Root
         open={isVideoModalOpen}
         onOpenChange={(e) => setIsVideoModalOpen(e.open)}
@@ -215,9 +214,7 @@ function ArticleCard({ Article }: Props) {
             <Dialog.Content maxW="90vw" w="800px">
               <Dialog.CloseTrigger />
               <Dialog.Body p={4}>
-                {Article.videoUrl && (
-                  <VideoPlayer src={Article.videoUrl} />
-                )}
+                {Article.videoUrl && <VideoPlayer src={Article.videoUrl} />}
               </Dialog.Body>
             </Dialog.Content>
           </Dialog.Positioner>
