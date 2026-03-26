@@ -14,6 +14,7 @@ import { ArticleContext } from "../contexts/ArticleContext";
 import { GET_ARTICLE } from "../graphql/articles/queries";
 import { type Article } from "../types";
 import AddCommentForm from "./CreateCommentForm";
+import { useAuth } from "../contexts/AuthContext";
 
 interface GetArticleQuery {
   article: Article;
@@ -22,6 +23,7 @@ interface GetArticleQuery {
 function ArticleDetail() {
   const { selectedArticle, isDetailOpen, closeDetail } =
     useContext(ArticleContext);
+  const { isAuthenticated } = useAuth();
 
   const { data, loading, error } = useQuery<GetArticleQuery>(GET_ARTICLE, {
     variables: { id: selectedArticle?.id },
@@ -112,9 +114,9 @@ function ArticleDetail() {
                 )}
               </Box>
 
-              <Box borderTop={"1px"} borderColor={"gray.200"} pt={4}>
+              {isAuthenticated && <Box borderTop={"1px"} borderColor={"gray.200"} pt={4}>
                 <AddCommentForm />
-              </Box>
+              </Box>}
             </VStack>
           )}
         </Box>

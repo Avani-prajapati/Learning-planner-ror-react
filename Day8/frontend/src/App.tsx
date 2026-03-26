@@ -110,7 +110,8 @@ function App() {
               <Button
                 size="sm"
                 borderRadius="full"
-                colorScheme={selectedTagId === null ? "blue" : "gray"}
+                variant={selectedTagId === null? "solid":"outline"}
+                colorPalette={selectedTagId === null ? "blue" : "white"}
                 onClick={() => setSelectedTagId(null)}
               >
                 All
@@ -120,20 +121,21 @@ function App() {
                   key={tag.id}
                   size="sm"
                   borderRadius="full"
-                  colorScheme={selectedTagId === tag.id ? "blue" : "gray"}
+                  variant={selectedTagId === tag.id? "solid":"outline"}
+                  colorPalette={selectedTagId === tag.id ? "blue" : "gray"}
                   onClick={() => setSelectedTagId(tag.id)}
                 >
                   {tag.name}
                 </Button>
               ))}
             </HStack>
-            <Button
+            {isAuthenticated && <Button
               colorScheme={"blue"}
               onClick={() => setShowCreateForm(true)}
               mb={2}
             >
               Add Article
-            </Button>
+            </Button>}
           </HStack>
         )}
         {data && data.articles.length === 0 && (
