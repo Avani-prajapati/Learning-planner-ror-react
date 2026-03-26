@@ -15,6 +15,7 @@ import { GET_ARTICLE } from "../graphql/articles/queries";
 import { type Article } from "../types";
 import AddCommentForm from "./CreateCommentForm";
 import { useAuth } from "../contexts/AuthContext";
+import CommentCard from "./CommentCard";
 
 interface GetArticleQuery {
   article: Article;
@@ -101,22 +102,20 @@ function ArticleDetail() {
                 ) : (
                   <VStack gap={3} align="stretch">
                     {data.article.comments.map((comment) => (
-                      <Box
+                      <CommentCard
+                        comment={comment}
                         key={comment.id}
-                        bg="gray.50"
-                        p={3}
-                        borderRadius="md"
-                      >
-                        <Text color="gray.600">{comment.body}</Text>
-                      </Box>
+                      ></CommentCard>
                     ))}
                   </VStack>
                 )}
               </Box>
 
-              {isAuthenticated && <Box borderTop={"1px"} borderColor={"gray.200"} pt={4}>
-                <AddCommentForm />
-              </Box>}
+              {isAuthenticated && (
+                <Box borderTop={"1px"} borderColor={"gray.200"} pt={4}>
+                  <AddCommentForm />
+                </Box>
+              )}
             </VStack>
           )}
         </Box>

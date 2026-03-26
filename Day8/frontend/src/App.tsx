@@ -49,7 +49,6 @@ function App() {
       : data.articles
     : [];
 
-
   function handleModal(tab: string) {
     setShowAuthModal(true);
     setTabOption(tab);
@@ -115,8 +114,12 @@ function App() {
               <Button
                 size="sm"
                 borderRadius="full"
-                variant={selectedTagId === null && !isMyView ? "solid" : "outline"}
-                colorPalette={selectedTagId === null && !isMyView ? "blue" : "white"}
+                variant={
+                  selectedTagId === null && !isMyView ? "solid" : "outline"
+                }
+                colorPalette={
+                  selectedTagId === null && !isMyView ? "blue" : "white"
+                }
                 onClick={() => {
                   setSelectedTagId(null);
                   setShowMyArticlesOnly(false);
@@ -129,7 +132,9 @@ function App() {
                   key={tag.id}
                   size="sm"
                   borderRadius="full"
-                  variant={selectedTagId === tag.id && !isMyView ? "solid" : "outline"}
+                  variant={
+                    selectedTagId === tag.id && !isMyView ? "solid" : "outline"
+                  }
                   colorPalette={selectedTagId === tag.id ? "blue" : "gray"}
                   onClick={() => {
                     setSelectedTagId(tag.id);
@@ -138,32 +143,32 @@ function App() {
                 >
                   {tag.name}
                 </Button>
-                
               ))}
-              {isAuthenticated && <Button
-               size="sm"
-               borderRadius="full"
-               variant={showMyArticlesOnly ? "solid" : "outline"}
-               colorPalette={showMyArticlesOnly ? "blue" : "gray"}
-               
-              onClick={() => {
-                setShowMyArticlesOnly(true);
-                setSelectedTagId(null);
-              }}
-            >
-              My Articles
-            </Button>}
+              {isAuthenticated && (
+                <Button
+                  size="sm"
+                  borderRadius="full"
+                  variant={showMyArticlesOnly ? "solid" : "outline"}
+                  colorPalette={showMyArticlesOnly ? "blue" : "gray"}
+                  onClick={() => {
+                    setShowMyArticlesOnly(true);
+                    setSelectedTagId(null);
+                  }}
+                >
+                  My Articles
+                </Button>
+              )}
             </HStack>
-            {isAuthenticated && 
-            (<HStack>
-            <Button
-              colorPalette={"gray"}
-              onClick={() => setShowCreateForm(true)}
-              mb={2}
-            >
-              Add Article
-            </Button>
-            </HStack>
+            {isAuthenticated && (
+              <HStack>
+                <Button
+                  colorPalette={"gray"}
+                  onClick={() => setShowCreateForm(true)}
+                  mb={2}
+                >
+                  Add Article
+                </Button>
+              </HStack>
             )}
           </HStack>
         )}
@@ -174,7 +179,9 @@ function App() {
             className="bg-white rounded-2xl shadow-sm border border-gray-200"
           >
             <Text className="text-gray-600 font-medium">
-              {isMyView ? "No your articles available" : "No Articles available"}
+              {isMyView
+                ? "No your articles available"
+                : "No Articles available"}
             </Text>
             <Text className="text-gray-400 text-sm">
               Start by creating your first Article 🚀

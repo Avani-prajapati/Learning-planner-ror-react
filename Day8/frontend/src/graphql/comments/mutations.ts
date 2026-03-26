@@ -19,4 +19,4 @@ export const DELETE_COMMENT = gql`
       errors
     }
   }
-`
+`;

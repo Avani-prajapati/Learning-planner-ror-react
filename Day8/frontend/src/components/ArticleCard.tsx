@@ -1,5 +1,12 @@
 import { useContext } from "react";
-import { Box, Text, Badge, HStack, VStack, CloseButton } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Badge,
+  HStack,
+  VStack,
+  CloseButton,
+} from "@chakra-ui/react";
 import { useMutation } from "@apollo/client/react";
 import { ArticleContext } from "../contexts/ArticleContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -22,7 +29,7 @@ function ArticleCard({ Article }: Props) {
   const remainingTagsCount = Math.max(0, tagCount - displayedTags.length);
 
   const bodyLineClamp = 3;
-  const bodyMinHeightEm = bodyLineClamp * 1.5; 
+  const bodyMinHeightEm = bodyLineClamp * 1.5;
 
   const [deleteArticle] = useMutation(DELETE_ARTICLE, {
     refetchQueries: [{ query: GET_ALL_ARTICLES, variables: { tagId: null } }],
@@ -77,7 +84,6 @@ function ArticleCard({ Article }: Props) {
               aria-label="Delete article"
               title="Delete article"
             />
-      
           )}
         </HStack>
 
@@ -165,7 +171,6 @@ function ArticleCard({ Article }: Props) {
               </HStack>
             )}
           </HStack>
-
         </HStack>
       </VStack>
     </Box>
