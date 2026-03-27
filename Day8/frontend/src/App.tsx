@@ -7,12 +7,12 @@ import ArticleDetail from "./components/ArticleDetail";
 import { useState } from "react";
 import CreateArticleForm from "./components/CreateArticleForm";
 import { useAuth } from "./contexts/AuthContext";
-import AuthModal from "./components/AuthModel";
+import AuthModal from "./components/AuthModal";
 import Header from "./components/Header";
 import ArticleFilters from "./components/ArticleFilters";
 import ArticleList from "./components/ArticleList";
 import { useFilteredArticles } from "./hooks/useFilteredArticles";
-import { useAuthModal } from "./hooks/useAuthMoal";
+import { useAuthModal } from "./hooks/useAuthModal";
 import { useArticleFilters } from "./hooks/useArticleFilters";
 
 interface GetAllArticlesQuery {
@@ -65,7 +65,7 @@ function App() {
               onTagChange={filters.handleTagChange}
               onTypeChange={filters.handleTypeChange}
               onToggleMyArticles={filters.toggleMyArticles}
-              isAuthenticated={false}
+              isAuthenticated={isAuthenticated}
             />
             {isAuthenticated && (
               <Button
@@ -90,12 +90,16 @@ function App() {
 
       <ArticleDetail />
 
-      {showCreateForm && (
-        <CreateArticleForm onClose={() => setShowCreateForm(false)} />
-      )}
-      {authModal.isOpen && (
-        <AuthModal onClose={authModal.close} tabOption={authModal.tabOption} />
-      )}
+      <CreateArticleForm 
+        isOpen={showCreateForm}
+        onClose={() => setShowCreateForm(false)} 
+      />
+      
+      <AuthModal 
+        isOpen={authModal.isOpen}
+        onClose={authModal.close}
+        defaultTab={authModal.tabOption}
+      />
     </Box>
   );
 }

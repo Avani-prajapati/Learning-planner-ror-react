@@ -3,8 +3,6 @@ import {
   Box,
   Text,
   Badge,
-  Dialog,
-  Portal,
   HStack,
   VStack,
   CloseButton,
@@ -18,6 +16,7 @@ import { DELETE_ARTICLE } from "../graphql/articles/mutation";
 import { GET_ALL_ARTICLES } from "../graphql/articles/queries";
 import "video.js/dist/video-js.css";
 import VideoPlayer from "./VideoPlayer";
+import { Modal } from "./ui/Modal";
 
 interface ArticleProps {
   article: Article;
@@ -200,26 +199,13 @@ function ArticleCard({ article }: ArticleProps) {
         </VStack>
       </Box>
 
-      <Dialog.Root
-        open={isVideoModalOpen}
-        onOpenChange={(e) => setIsVideoModalOpen(e.open)}
-        size="lg"
-        placement="center"
-        lazyMount
-        unmountOnExit
-      >
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content maxW="90vw" w="800px">
-              <Dialog.CloseTrigger />
-              <Dialog.Body p={4}>
-                {article.videoUrl && <VideoPlayer src={article.videoUrl} />}
-              </Dialog.Body>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
+     <Modal
+     isOpen ={isVideoModalOpen}
+     onClose={()=>setIsVideoModalOpen(false)}
+     size="lg"
+     >
+      {article.videoUrl && <VideoPlayer src={article.videoUrl}/>}
+     </Modal>
     </>
   );
 }
