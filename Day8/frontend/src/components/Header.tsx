@@ -1,4 +1,11 @@
-import { Box, Container, HStack, Heading, Text, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  HStack,
+  Heading,
+  Text,
+  Button,
+} from "@chakra-ui/react";
 import type { User } from "../types";
 
 interface HeaderProps {

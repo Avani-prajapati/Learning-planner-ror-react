@@ -20,6 +20,7 @@ import CreateArticleForm from "./components/CreateArticleForm";
 import { useAuth } from "./contexts/AuthContext";
 import AuthModal from "./components/AuthModel";
 import Header from "./components/Header";
+import ArticleFilters from "./components/ArticleFilters";
 
 interface GetAllArticlesQuery {
   articles: Article[];
@@ -137,26 +138,32 @@ function App() {
     setTabOption(mode);
   }
 
-  const handleTagSelect = (tagId: string | null) => {
+  function handleTypeChange(type: string | null) {
+    setSelectedArticleType(type);
+    setShowMyArticlesOnly(false);
+    setSelectedTagId(null);
+  }
+
+  function handleTagChange(tagId: string | null) {
     setSelectedTagId(tagId);
     setShowMyArticlesOnly(false);
-  };
+  }
 
-  const handleMyArticlesToggle = () => {
-    setShowMyArticlesOnly(!showMyArticlesOnly);
+  function toggleMyArticles() {
+    setShowMyArticlesOnly((prev) => !prev);
     setSelectedTagId(null);
     setSelectedArticleType(null);
-  };
+  }
 
   return (
     <Box className="min-h-screen bg-linear-to-br from-gray-50 to-gray-200">
       <Header
-         isAuthenticated={isAuthenticated}
-         user={user}
-         onLogin={() => openAuthModal("signin")}
-         onSignup={() => openAuthModal("signup")}
-         onLogout={logout}
-       />
+        isAuthenticated={isAuthenticated}
+        user={user}
+        onLogin={() => openAuthModal("signin")}
+        onSignup={() => openAuthModal("signup")}
+        onLogout={logout}
+      />
 
       <Container maxW="6xl" py={5}>
         {loading && (
@@ -175,90 +182,16 @@ function App() {
         )}
 
         {data && (
-          <HStack className=" justify-between" pb={3}>
-            <HStack gap={2} flexWrap="wrap">
-              <Button
-                size="sm"
-                borderRadius="full"
-                variant={
-                  selectedTagId === null && !isMyView ? "solid" : "outline"
-                }
-                colorPalette={
-                  selectedTagId === null && !isMyView ? "blue" : "gray"
-                }
-                onClick={() => handleTagSelect(null)}
-              >
-                All
-              </Button>
-              {tagsData?.tags.map((tag) => (
-                <Button
-                  key={tag.id}
-                  size="sm"
-                  borderRadius="full"
-                  variant={
-                    selectedTagId === tag.id && !isMyView ? "solid" : "outline"
-                  }
-                  colorPalette={selectedTagId === tag.id ? "blue" : "gray"}
-                  onClick={() => handleTagSelect(tag.id)}
-                >
-                  {tag.name}
-                </Button>
-              ))}
-              {isAuthenticated && (
-                <Button
-                  size="sm"
-                  borderRadius="full"
-                  variant={showMyArticlesOnly ? "solid" : "outline"}
-                  colorPalette={showMyArticlesOnly ? "blue" : "gray"}
-                  onClick={handleMyArticlesToggle}
-                >
-                  My Articles
-                </Button>
-              )}
-
-              <Select.Root
-                collection={articleTypeCollection}
-                value={selectedArticleType ? [selectedArticleType] : []}
-                onValueChange={(e) => {
-                  setSelectedArticleType(e.value[0] || null);
-                  setShowMyArticlesOnly(false);
-                  setSelectedTagId(null);
-                }}
-                size="sm"
-                width="220px"
-              >
-                <Select.Control>
-                  <Select.Trigger>
-                    <Select.ValueText placeholder="All Types" />
-                  </Select.Trigger>
-                  <Select.IndicatorGroup>
-                    <Select.Indicator />
-                    <Select.ClearTrigger />
-                  </Select.IndicatorGroup>
-                </Select.Control>
-                <Select.Positioner>
-                  <Select.Content>
-                    {articleTypeCollection.items.map((item) => (
-                      <Select.Item key={item.value} item={item.value}>
-                        {item.label}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Positioner>
-              </Select.Root>
-            </HStack>
-            {isAuthenticated && (
-              <HStack>
-                <Button
-                  colorPalette={"gray"}
-                  onClick={() => setShowCreateForm(true)}
-                  mb={2}
-                >
-                  Add Article
-                </Button>
-              </HStack>
-            )}
-          </HStack>
+          <ArticleFilters
+            tags={tagsData?.tags || []}
+            selectedTagId={selectedTagId}
+            selectedArticleType={selectedArticleType}
+            isMyView={isMyView}
+            isAuthenticated={isAuthenticated}
+            onTagChange={handleTagChange}
+            onTypeChange={handleTypeChange}
+            onToggleMyArticles={toggleMyArticles}
+          />
         )}
 
         {data && filteredArticles.length === 0 ? (
