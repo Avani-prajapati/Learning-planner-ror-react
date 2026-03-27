@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client/react";
 import {
   Box,
-  Heading,
   Spinner,
   Text,
   VStack,
@@ -20,6 +19,7 @@ import { useState, useMemo } from "react";
 import CreateArticleForm from "./components/CreateArticleForm";
 import { useAuth } from "./contexts/AuthContext";
 import AuthModal from "./components/AuthModel";
+import Header from "./components/Header";
 
 interface GetAllArticlesQuery {
   articles: Article[];
@@ -132,9 +132,9 @@ function App() {
     selectedArticleType,
   });
 
-  function handleModal(tab: string) {
+  function openAuthModal(mode: string) {
     setShowAuthModal(true);
-    setTabOption(tab);
+    setTabOption(mode);
   }
 
   const handleTagSelect = (tagId: string | null) => {
@@ -150,42 +150,13 @@ function App() {
 
   return (
     <Box className="min-h-screen bg-linear-to-br from-gray-50 to-gray-200">
-      <Box className="bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <Container maxW="6xl" py={6}>
-          <HStack align="start" className="justify-between">
-            <Heading size="lg" className="text-gray-800">
-              Blogger
-            </Heading>
-            <HStack gap={3}>
-              {isAuthenticated ? (
-                <>
-                  <Text fontSize="sm" color="gray.600">
-                    {user?.name}
-                  </Text>
-                  <Button variant="outline" colorScheme="red" onClick={logout}>
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    colorScheme="blue"
-                    onClick={() => handleModal("signin")}
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    colorScheme="blue"
-                    onClick={() => handleModal("signup")}
-                  >
-                    Sign up
-                  </Button>
-                </>
-              )}
-            </HStack>
-          </HStack>
-        </Container>
-      </Box>
+      <Header
+         isAuthenticated={isAuthenticated}
+         user={user}
+         onLogin={() => openAuthModal("signin")}
+         onSignup={() => openAuthModal("signup")}
+         onLogout={logout}
+       />
 
       <Container maxW="6xl" py={5}>
         {loading && (

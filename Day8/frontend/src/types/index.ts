@@ -2,7 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  articles: Article[];
+  articles?: Article[];
   profile?: Profile | null;
 }
 
