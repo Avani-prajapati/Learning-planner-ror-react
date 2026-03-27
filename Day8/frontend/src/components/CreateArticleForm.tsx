@@ -162,7 +162,6 @@ function CreateArticleForm({ onClose }: Props) {
               </Menu.Positioner>
             </Menu.Root>
 
-            {/* Selected Tags */}
             {selectedTagIds.length > 0 && (
               <HStack gap={2} flexWrap="wrap" mt={2}>
                 {selectedTagIds.map((id) => {
@@ -197,7 +196,8 @@ function CreateArticleForm({ onClose }: Props) {
               <Button
                 size="sm"
                 borderRadius="xl"
-                colorScheme={articleType === "text" ? "blue" : "gray"}
+                variant={"outline"}
+                colorPalette={articleType === "text" ? "blue" : "gray"}
                 onClick={() => {
                   setArticleType("text");
                   setVideoFile(null);
@@ -209,7 +209,8 @@ function CreateArticleForm({ onClose }: Props) {
               <Button
                 size="sm"
                 borderRadius="xl"
-                colorScheme={articleType === "video" ? "blue" : "gray"}
+                variant={"outline"}
+                colorPalette={articleType === "video" ? "blue" : "gray"}
                 onClick={() => {
                   setArticleType("video");
                   setBody("");
