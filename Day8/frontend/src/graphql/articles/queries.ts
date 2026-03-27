@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_ARTICLES = gql`
-  query GetAllArticles($tagId: ID) {
-    articles(tagId: $tagId) {
+  query GetAllArticles {
+    articles {
       id
       title
       body
