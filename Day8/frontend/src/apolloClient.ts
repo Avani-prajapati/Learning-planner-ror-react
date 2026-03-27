@@ -2,10 +2,6 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { SetContextLink } from "@apollo/client/link/context";
 import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
 
-// const httpLink = new HttpLink({
-//   uri: "http://localhost:3000/graphql",
-// });
-
 const uploadLink = new UploadHttpLink({
   uri: "http://localhost:3000/graphql",
 });

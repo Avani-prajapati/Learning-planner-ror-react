@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Text,
@@ -11,7 +11,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { useMutation } from "@apollo/client/react";
-import { ArticleContext } from "../contexts/ArticleContext";
+import { useArticle } from "../contexts/ArticleContext";
 import { useAuth } from "../contexts/AuthContext";
 import { type Article } from "../types";
 import { DELETE_ARTICLE } from "../graphql/articles/mutation";
@@ -24,7 +24,7 @@ interface Props {
 }
 
 function ArticleCard({ Article }: Props) {
-  const { selectArticle } = useContext(ArticleContext);
+  const { selectArticle } = useArticle();
   const { user, isAuthenticated } = useAuth();
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 

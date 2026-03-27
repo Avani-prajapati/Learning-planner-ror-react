@@ -22,7 +22,9 @@ export function useFilteredArticles({
     let filtered = [...articles];
 
     if (isMyView && currentUserId) {
-      filtered = filtered.filter((article) => article.user.id === currentUserId);
+      filtered = filtered.filter(
+        (article) => article.user.id === currentUserId,
+      );
     }
 
     if (selectedTagId) {

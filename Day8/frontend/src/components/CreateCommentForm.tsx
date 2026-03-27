@@ -1,8 +1,8 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useMutation } from "@apollo/client/react";
 import { Box, Button, Textarea, Text } from "@chakra-ui/react";
 import { GET_ARTICLE } from "../graphql/articles/queries";
-import { ArticleContext } from "../contexts/ArticleContext";
+import { useArticle } from "../contexts/ArticleContext";
 import type { Comment } from "../types";
 import { CREATE_COMMENT } from "../graphql/comments/mutations";
 
@@ -14,7 +14,7 @@ interface createCommentResponse {
 }
 
 function CreateCommentForm() {
-  const { selectedArticle } = useContext(ArticleContext);
+  const { selectedArticle } = useArticle();
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
 

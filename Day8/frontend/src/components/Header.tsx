@@ -13,11 +13,8 @@ interface HeaderProps {
   onSignup: () => void;
 }
 
-function Header({
-  onLogin,
-  onSignup,
-}: HeaderProps) {
-  const {isAuthenticated, onLogout, user} = useAuth()  
+function Header({ onLogin, onSignup }: HeaderProps) {
+  const { isAuthenticated, onLogout, user } = useAuth();
   return (
     <Box className="bg-white/80 backdrop-blur-md border-b border-gray-200">
       <Container maxW="6xl" py={6}>

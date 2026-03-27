@@ -4,12 +4,11 @@ import { useAuth } from "../contexts/AuthContext";
 import { DELETE_COMMENT } from "../graphql/comments/mutations";
 import { useMutation } from "@apollo/client/react";
 import { GET_ARTICLE } from "../graphql/articles/queries";
-import { useContext } from "react";
-import { ArticleContext } from "../contexts/ArticleContext";
+import { useArticle } from "../contexts/ArticleContext";
 
 export default function CommentCard({ comment }: { comment: Comment }) {
   const { user, isAuthenticated } = useAuth();
-  const { selectedArticle } = useContext(ArticleContext);
+  const { selectedArticle } = useArticle();
   const isOwner = isAuthenticated && user?.id === comment?.user?.id;
   const [deleteComment] = useMutation(DELETE_COMMENT, {
     refetchQueries: [

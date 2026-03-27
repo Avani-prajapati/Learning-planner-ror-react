@@ -1,15 +1,10 @@
 import { useQuery } from "@apollo/client/react";
-import {
-  Box,
-  HStack,
-  Container,
-  Button,
-} from "@chakra-ui/react";
+import { Box, HStack, Container, Button } from "@chakra-ui/react";
 import { GET_ALL_ARTICLES } from "./graphql/articles/queries";
 import { GET_TAGS } from "./graphql/tags/queries";
 import { type Article, type Tag } from "./types";
 import ArticleDetail from "./components/ArticleDetail";
-import { useState} from "react";
+import { useState } from "react";
 import CreateArticleForm from "./components/CreateArticleForm";
 import { useAuth } from "./contexts/AuthContext";
 import AuthModal from "./components/AuthModel";
@@ -34,9 +29,12 @@ function App() {
   const filters = useArticleFilters();
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES, {
-    fetchPolicy: "cache-and-network",
-  });
+  const { data, loading, error } = useQuery<GetAllArticlesQuery>(
+    GET_ALL_ARTICLES,
+    {
+      fetchPolicy: "cache-and-network",
+    },
+  );
   const { data: tagsData } = useQuery<GetAllTagsQuery>(GET_TAGS);
 
   const isMyView = filters.showMyArticlesOnly && isAuthenticated;
@@ -66,9 +64,15 @@ function App() {
               isMyView={isMyView}
               onTagChange={filters.handleTagChange}
               onTypeChange={filters.handleTypeChange}
-              onToggleMyArticles={filters.toggleMyArticles} isAuthenticated={false}            />
+              onToggleMyArticles={filters.toggleMyArticles}
+              isAuthenticated={false}
+            />
             {isAuthenticated && (
-              <Button colorPalette="gray" onClick={() => setShowCreateForm(true)} mb={2}>
+              <Button
+                colorPalette="gray"
+                onClick={() => setShowCreateForm(true)}
+                mb={2}
+              >
                 Add Article
               </Button>
             )}
@@ -80,12 +84,15 @@ function App() {
           error={error}
           articles={filteredArticles}
           isMyView={isMyView}
-          selectedArticleType={filters.selectedArticleType}/>
+          selectedArticleType={filters.selectedArticleType}
+        />
       </Container>
 
       <ArticleDetail />
 
-      {showCreateForm && <CreateArticleForm onClose={() => setShowCreateForm(false)} />}
+      {showCreateForm && (
+        <CreateArticleForm onClose={() => setShowCreateForm(false)} />
+      )}
       {authModal.isOpen && (
         <AuthModal onClose={authModal.close} tabOption={authModal.tabOption} />
       )}
@@ -93,4 +100,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

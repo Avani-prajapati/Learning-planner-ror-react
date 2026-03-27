@@ -1,4 +1,4 @@
-import { createContext, useState, type ReactNode } from "react";
+import { createContext, useState, type ReactNode, useContext } from "react";
 import { type Article } from "../types";
 
 interface ArticleContextType {
@@ -36,4 +36,8 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
       {children}
     </ArticleContext.Provider>
   );
+}
+
+export function useArticle() {
+  return useContext(ArticleContext);
 }

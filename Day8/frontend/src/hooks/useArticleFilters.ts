@@ -3,7 +3,9 @@ import { useState } from "react";
 export function useArticleFilters() {
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
   const [showMyArticlesOnly, setShowMyArticlesOnly] = useState(false);
-  const [selectedArticleType, setSelectedArticleType] = useState<string | null>(null);
+  const [selectedArticleType, setSelectedArticleType] = useState<string | null>(
+    null,
+  );
 
   function handleTypeChange(type: string | null) {
     setSelectedArticleType(type);

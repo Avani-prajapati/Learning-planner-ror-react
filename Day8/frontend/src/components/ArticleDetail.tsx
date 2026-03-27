@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { useQuery } from "@apollo/client/react";
 import {
   Box,
@@ -12,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import "video.js/dist/video-js.css";
 import VideoPlayer from "./VideoPlayer";
-import { ArticleContext } from "../contexts/ArticleContext";
+import { useArticle } from "../contexts/ArticleContext";
 import { GET_ARTICLE } from "../graphql/articles/queries";
 import { type Article } from "../types";
 import AddCommentForm from "./CreateCommentForm";
@@ -24,8 +23,7 @@ interface GetArticleQuery {
 }
 
 function ArticleDetail() {
-  const { selectedArticle, isDetailOpen, closeDetail } =
-    useContext(ArticleContext);
+  const { selectedArticle, isDetailOpen, closeDetail } = useArticle();
   const { isAuthenticated } = useAuth();
 
   const { data, loading, error } = useQuery<GetArticleQuery>(GET_ARTICLE, {
