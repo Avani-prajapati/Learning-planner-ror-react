@@ -100,9 +100,6 @@ function EmptyState({
       className="bg-white rounded-2xl shadow-sm border border-gray-200"
     >
       <Text className="text-gray-600 font-medium">{getMessage()}</Text>
-      <Text className="text-gray-400 text-sm">
-        Start by creating your first Article 🚀
-      </Text>
     </VStack>
   );
 }
