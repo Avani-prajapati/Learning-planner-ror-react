@@ -10,7 +10,7 @@ function ArticleGrid({ articles }: { articles: Article[] }) {
           key={article.id}
           className="transform transition duration-300 hover:scale-[1.02]"
         >
-          <ArticleCard Article={article} />
+          <ArticleCard article={article} />
         </Box>
       ))}
     </Box>

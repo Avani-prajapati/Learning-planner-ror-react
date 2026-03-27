@@ -19,17 +19,17 @@ import { GET_ALL_ARTICLES } from "../graphql/articles/queries";
 import "video.js/dist/video-js.css";
 import VideoPlayer from "./VideoPlayer";
 
-interface Props {
-  Article: Article;
+interface ArticleProps {
+  article: Article;
 }
 
-function ArticleCard({ Article }: Props) {
+function ArticleCard({ article }: ArticleProps) {
   const { selectArticle } = useArticle();
   const { user, isAuthenticated } = useAuth();
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
-  const tagCount = Article.tags?.length ?? 0;
-  const tags = Article.tags ?? [];
+  const tagCount = article.tags?.length ?? 0;
+  const tags = article.tags ?? [];
   const maxTagsToShow = 5;
   const displayedTags = tags.slice(0, maxTagsToShow);
   const remainingTagsCount = Math.max(0, tagCount - displayedTags.length);
@@ -48,15 +48,15 @@ function ArticleCard({ Article }: Props) {
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    deleteArticle({ variables: { id: Article.id } });
+    deleteArticle({ variables: { id: article.id } });
   };
 
-  const isOwner = isAuthenticated && user?.id === Article.user.id;
+  const isOwner = isAuthenticated && user?.id === article.user.id;
 
   return (
     <>
       <Box
-        onClick={() => selectArticle(Article)}
+        onClick={() => selectArticle(article)}
         cursor="pointer"
         bg="white"
         borderRadius="2xl"
@@ -83,7 +83,7 @@ function ArticleCard({ Article }: Props) {
               transition="color 0.2s"
               _hover={{ color: "blue.500" }}
             >
-              {Article.title}
+              {article.title}
             </Text>
 
             {isOwner && (
@@ -100,7 +100,7 @@ function ArticleCard({ Article }: Props) {
           </HStack>
 
           <Box flex="1" minH="0">
-            {Article.body ? (
+            {article.body ? (
               <Text
                 fontSize="sm"
                 color="gray.600"
@@ -113,9 +113,9 @@ function ArticleCard({ Article }: Props) {
                   overflow: "hidden",
                 }}
               >
-                {Article.body}
+                {article.body}
               </Text>
-            ) : Article.videoUrl ? (
+            ) : article.videoUrl ? (
               <Link
                 onClick={handleVideoLinkClick}
                 color="blue.500"
@@ -151,7 +151,7 @@ function ArticleCard({ Article }: Props) {
                 <Box as="span" mr={1}>
                   💬
                 </Box>
-                {Article.comments?.length ?? 0} comments
+                {article.comments?.length ?? 0} comments
               </Badge>
 
               {tagCount > 0 && (
@@ -214,7 +214,7 @@ function ArticleCard({ Article }: Props) {
             <Dialog.Content maxW="90vw" w="800px">
               <Dialog.CloseTrigger />
               <Dialog.Body p={4}>
-                {Article.videoUrl && <VideoPlayer src={Article.videoUrl} />}
+                {article.videoUrl && <VideoPlayer src={article.videoUrl} />}
               </Dialog.Body>
             </Dialog.Content>
           </Dialog.Positioner>

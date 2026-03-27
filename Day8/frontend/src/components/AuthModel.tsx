@@ -35,7 +35,7 @@ interface SignUpResponse {
 }
 
 function AuthModal({ onClose, tabOption }: Props) {
-  const { login } = useAuth();
+  const { onLogin} = useAuth();
   const [tab, setTab] = useState<String>(tabOption);
   const [error, setError] = useState("");
 
@@ -53,7 +53,7 @@ function AuthModal({ onClose, tabOption }: Props) {
         if (data.signIn.errors.length > 0) {
           setError(data.signIn.errors[0]);
         } else {
-          login(data.signIn.token, data.signIn.user);
+          onLogin(data.signIn.token, data.signIn.user);
           onClose();
         }
       },
@@ -68,7 +68,7 @@ function AuthModal({ onClose, tabOption }: Props) {
         if (data.signUp.errors.length > 0) {
           setError(data.signUp.errors[0]);
         } else {
-          login(data.signUp.token, data.signUp.user);
+          onLogin(data.signUp.token, data.signUp.user);
           onClose();
         }
       },

@@ -70,7 +70,7 @@ function ArticleFilters({
         )}
 
         <Select.Root
-          collection={articleTypeCollection} // ✅ REQUIRED
+          collection={articleTypeCollection}
           value={selectedArticleType ? [selectedArticleType] : []}
           onValueChange={(e) => onTypeChange(e.value[0] || null)}
           size="sm"
