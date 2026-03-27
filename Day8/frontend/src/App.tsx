@@ -21,6 +21,7 @@ import { useAuth } from "./contexts/AuthContext";
 import AuthModal from "./components/AuthModel";
 import Header from "./components/Header";
 import ArticleFilters from "./components/ArticleFilters";
+import ArticleList from "./components/ArticleList";
 
 interface GetAllArticlesQuery {
   articles: Article[];
@@ -166,51 +167,41 @@ function App() {
       />
 
       <Container maxW="6xl" py={5}>
-        {loading && (
-          <VStack gap={4} py={20}>
-            <Spinner size="xl" width={"4px"} color="blue.500" />
-            <Text className="text-gray-500">Loading Articles...</Text>
-          </VStack>
-        )}
-
-        {error && (
-          <Box className="bg-red-50 border border-red-200 rounded-xl p-6 text-center shadow-sm">
-            <Text color="red.500" fontWeight="medium">
-              {error.message}
-            </Text>
-          </Box>
-        )}
-
         {data && (
-          <ArticleFilters
-            tags={tagsData?.tags || []}
-            selectedTagId={selectedTagId}
-            selectedArticleType={selectedArticleType}
-            isMyView={isMyView}
-            isAuthenticated={isAuthenticated}
-            onTagChange={handleTagChange}
-            onTypeChange={handleTypeChange}
-            onToggleMyArticles={toggleMyArticles}
-          />
+          <HStack className=" justify-between" pb={3}>
+            <ArticleFilters
+              tags={tagsData?.tags || []}
+              selectedTagId={selectedTagId}
+              selectedArticleType={selectedArticleType}
+              isMyView={isMyView}
+              isAuthenticated={isAuthenticated}
+              onTagChange={handleTagChange}
+              onTypeChange={handleTypeChange}
+              onToggleMyArticles={toggleMyArticles}
+            />
+
+            {isAuthenticated && (
+              <HStack>
+                <Button
+                  colorPalette={"gray"}
+                  onClick={() => setShowCreateForm(true)}
+                  mb={2}
+                >
+                  Add Article
+                </Button>
+              </HStack>
+            )}
+          </HStack>
         )}
 
-        {data && filteredArticles.length === 0 ? (
-          <EmptyState
-            isMyView={isMyView}
-            selectedArticleType={selectedArticleType}
-          />
-        ) : data && filteredArticles.length > 0 ? (
-          <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredArticles.map((article) => (
-              <Box
-                key={article.id}
-                className="transform transition duration-300 hover:scale-[1.02]"
-              >
-                <ArticleCard Article={article} />
-              </Box>
-            ))}
-          </Box>
-        ) : null}
+        <ArticleList
+          loading={loading}
+          error={error}
+          articles={filteredArticles}
+          isEmpty={filteredArticles.length === 0}
+          isMyView={isMyView}
+          selectedArticleType={selectedArticleType}
+        />
       </Container>
 
       <ArticleDetail />
