@@ -17,6 +17,8 @@ import Header from "./components/Header";
 import ArticleFilters from "./components/ArticleFilters";
 import ArticleList from "./components/ArticleList";
 import { useFilteredArticles } from "./hooks/useFilteredArticles";
+import { useAuthModal } from "./hooks/useAuthMoal";
+import { useArticleFilters } from "./hooks/useArticleFilters";
 
 interface GetAllArticlesQuery {
   articles: Article[];
@@ -27,89 +29,48 @@ interface GetAllTagsQuery {
 }
 
 function App() {
-  const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-  const [showMyArticlesOnly, setShowMyArticlesOnly] = useState(false);
-  const [selectedArticleType, setSelectedArticleType] = useState<string | null>(
-    null,
-  );
-  const { data: tagsData } = useQuery<GetAllTagsQuery>(GET_TAGS);
-  const { data, loading, error } = useQuery<GetAllArticlesQuery>(
-    GET_ALL_ARTICLES,
-    {
-      fetchPolicy: "cache-and-network"
-    },
-  );
+  const { isAuthenticated, user } = useAuth();
+  const authModal = useAuthModal();
+  const filters = useArticleFilters();
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const { isAuthenticated, user, logout } = useAuth();
-  const [tabOption, setTabOption] = useState("");
 
-  const isMyView = showMyArticlesOnly && isAuthenticated;
+  const { data, loading, error } = useQuery<GetAllArticlesQuery>(GET_ALL_ARTICLES, {
+    fetchPolicy: "cache-and-network",
+  });
+  const { data: tagsData } = useQuery<GetAllTagsQuery>(GET_TAGS);
+
+  const isMyView = filters.showMyArticlesOnly && isAuthenticated;
 
   const filteredArticles = useFilteredArticles({
     articles: data?.articles,
     isMyView,
     currentUserId: user?.id,
-    selectedTagId,
-    selectedArticleType,
+    selectedTagId: filters.selectedTagId,
+    selectedArticleType: filters.selectedArticleType,
   });
-  
-  function openAuthModal(mode: string) {
-    setShowAuthModal(true);
-    setTabOption(mode);
-  }
-
-  function handleTypeChange(type: string | null) {
-    setSelectedArticleType(type);
-    setShowMyArticlesOnly(false);
-    setSelectedTagId(null);
-  }
-
-  function handleTagChange(tagId: string | null) {
-    setSelectedTagId(tagId);
-    setShowMyArticlesOnly(false);
-  }
-
-  function toggleMyArticles() {
-    setShowMyArticlesOnly((prev) => !prev);
-    setSelectedTagId(null);
-    setSelectedArticleType(null);
-  }
 
   return (
     <Box className="min-h-screen bg-linear-to-br from-gray-50 to-gray-200">
       <Header
-        isAuthenticated={isAuthenticated}
-        user={user}
-        onLogin={() => openAuthModal("signin")}
-        onSignup={() => openAuthModal("signup")}
-        onLogout={logout}
+        onLogin={() => authModal.open("signin")}
+        onSignup={() => authModal.open("signup")}
       />
 
       <Container maxW="6xl" py={5}>
         {data && (
-          <HStack className=" justify-between" pb={3}>
+          <HStack className="justify-between" pb={3}>
             <ArticleFilters
-              tags={tagsData?.tags || []}
-              selectedTagId={selectedTagId}
-              selectedArticleType={selectedArticleType}
+              tags={tagsData?.tags ?? []}
+              selectedTagId={filters.selectedTagId}
+              selectedArticleType={filters.selectedArticleType}
               isMyView={isMyView}
-              isAuthenticated={isAuthenticated}
-              onTagChange={handleTagChange}
-              onTypeChange={handleTypeChange}
-              onToggleMyArticles={toggleMyArticles}
-            />
-
+              onTagChange={filters.handleTagChange}
+              onTypeChange={filters.handleTypeChange}
+              onToggleMyArticles={filters.toggleMyArticles} isAuthenticated={false}            />
             {isAuthenticated && (
-              <HStack>
-                <Button
-                  colorPalette={"gray"}
-                  onClick={() => setShowCreateForm(true)}
-                  mb={2}
-                >
-                  Add Article
-                </Button>
-              </HStack>
+              <Button colorPalette="gray" onClick={() => setShowCreateForm(true)} mb={2}>
+                Add Article
+              </Button>
             )}
           </HStack>
         )}
@@ -118,25 +79,18 @@ function App() {
           loading={loading}
           error={error}
           articles={filteredArticles}
-          isEmpty={filteredArticles.length === 0}
           isMyView={isMyView}
-          selectedArticleType={selectedArticleType}
-        />
+          selectedArticleType={filters.selectedArticleType}/>
       </Container>
 
       <ArticleDetail />
-      {showCreateForm && (
-        <CreateArticleForm onClose={() => setShowCreateForm(false)} />
-      )}
 
-      {showAuthModal && (
-        <AuthModal
-          onClose={() => setShowAuthModal(false)}
-          tabOption={tabOption}
-        />
+      {showCreateForm && <CreateArticleForm onClose={() => setShowCreateForm(false)} />}
+      {authModal.isOpen && (
+        <AuthModal onClose={authModal.close} tabOption={authModal.tabOption} />
       )}
     </Box>
   );
 }
 
-export default App;
+export default App

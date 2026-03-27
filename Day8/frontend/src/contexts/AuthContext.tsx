@@ -14,22 +14,22 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (token: string, user: User) => void;
-  logout: () => void;
+  onLogin: (token: string, user: User) => void;
+  onLogout: () => void;
   isAuthenticated: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  login: () => {},
-  logout: () => {},
+  onLogin: () => {},
+  onLogout: () => {},
   isAuthenticated: false,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (token: string, user: User) => {
+  const onLogin = (token: string, user: User) => {
     localStorage.setItem("token", token);
     localStorage.setItem(
       "user",
@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(user);
   };
 
-  const logout = () => {
+  const onLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
@@ -56,8 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
-        login,
-        logout,
+        onLogin,
+        onLogout,
         isAuthenticated: !!user,
       }}
     >

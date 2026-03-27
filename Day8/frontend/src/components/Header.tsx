@@ -6,23 +6,18 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
-import type { User } from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 interface HeaderProps {
-  isAuthenticated: boolean;
-  user: User | null;
   onLogin: () => void;
   onSignup: () => void;
-  onLogout: () => void;
 }
 
 function Header({
-  isAuthenticated,
-  user,
   onLogin,
   onSignup,
-  onLogout,
 }: HeaderProps) {
+  const {isAuthenticated, onLogout, user} = useAuth()  
   return (
     <Box className="bg-white/80 backdrop-blur-md border-b border-gray-200">
       <Container maxW="6xl" py={6}>

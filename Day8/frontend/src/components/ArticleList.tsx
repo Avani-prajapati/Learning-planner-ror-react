@@ -8,7 +8,6 @@ interface ArticleListProps {
   loading: boolean;
   error?: Error;
   articles?: Article[];
-  isEmpty: boolean;
   isMyView: boolean;
   selectedArticleType: string | null;
 }
@@ -17,17 +16,14 @@ function ArticleList({
   loading,
   error,
   articles,
-  isEmpty,
   isMyView,
   selectedArticleType,
 }: ArticleListProps) {
-  if (loading) return <LoadingState />;
+  if (loading && !articles) return <LoadingState />;  // ← key fix
 
   if (error) return <ErrorState message={error.message} />;
 
-  if (!articles) return null;
-
-  if (isEmpty) {
+  if (!articles || articles.length === 0) {           // ← derive isEmpty locally
     return (
       <EmptyState
         isMyView={isMyView}
