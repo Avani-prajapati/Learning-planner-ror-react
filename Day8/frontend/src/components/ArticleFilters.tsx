@@ -1,4 +1,5 @@
 import { HStack, Button, Select, createListCollection } from "@chakra-ui/react";
+import { useAuth } from "../contexts/AuthContext";
 
 const articleTypeCollection = createListCollection({
   items: [
@@ -12,8 +13,6 @@ interface ArticleFiltersProps {
   selectedTagId: string | null;
   selectedArticleType: string | null;
   isMyView: boolean;
-  isAuthenticated: boolean;
-
   onTagChange: (tagId: string | null) => void;
   onTypeChange: (type: string | null) => void;
   onToggleMyArticles: () => void;
@@ -24,11 +23,12 @@ function ArticleFilters({
   selectedTagId,
   selectedArticleType,
   isMyView,
-  isAuthenticated,
   onTagChange,
   onTypeChange,
   onToggleMyArticles,
 }: ArticleFiltersProps) {
+  const { isAuthenticated } = useAuth();
+
   return (
     <HStack className="justify-between" pb={3}>
       <HStack gap={2} flexWrap="wrap">

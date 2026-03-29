@@ -75,7 +75,7 @@ function CreateArticleForm({ isOpen, onClose }: CreateArticleFormProps) {
     },
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     const validationError = validateForm(formState);
     if (validationError) {
       setError(validationError);
@@ -85,7 +85,12 @@ function CreateArticleForm({ isOpen, onClose }: CreateArticleFormProps) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create New Article" size="lg">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Create New Article"
+      size="lg"
+    >
       <VStack gap={4} align="stretch">
         <Box>
           <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
@@ -160,9 +165,7 @@ function CreateArticleForm({ isOpen, onClose }: CreateArticleFormProps) {
                 size="sm"
                 borderRadius="xl"
                 variant="outline"
-                colorPalette={
-                  formState.articleType === type ? "blue" : "gray"
-                }
+                colorPalette={formState.articleType === type ? "blue" : "gray"}
                 onClick={() => setArticleType(type)}
               >
                 {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -232,4 +235,4 @@ function CreateArticleForm({ isOpen, onClose }: CreateArticleFormProps) {
   );
 }
 
-export default CreateArticleForm
+export default CreateArticleForm;

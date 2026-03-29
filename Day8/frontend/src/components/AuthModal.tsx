@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client/react";
-import {
-  Input,
-  Text,
-  VStack,
-  HStack,
-  Link,
-  Button,
-} from "@chakra-ui/react";
+import { Input, Text, VStack, HStack, Link, Button } from "@chakra-ui/react";
 import { SIGN_IN, SIGN_UP } from "../graphql/auth/mutations";
 import { useAuth } from "../contexts/AuthContext";
 import { Modal } from "./ui/Modal";
@@ -99,7 +92,7 @@ function AuthModal({ isOpen, onClose, defaultTab = "signin" }: AuthModalProps) {
     },
   );
 
-  const handleSignIn = () => {
+  const handleSignIn = (): void => {
     if (!email || !password) {
       setError("All fields required.");
       return;
@@ -108,7 +101,7 @@ function AuthModal({ isOpen, onClose, defaultTab = "signin" }: AuthModalProps) {
     signIn({ variables: { email, password } });
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = (): void => {
     if (!name || !signUpEmail || !signUpPassword || !passwordConfirmation) {
       setError("All fields required.");
       return;

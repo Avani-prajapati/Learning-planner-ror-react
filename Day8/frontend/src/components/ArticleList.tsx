@@ -19,12 +19,11 @@ function ArticleList({
   isMyView,
   selectedArticleType,
 }: ArticleListProps) {
-  if (loading && !articles) return <LoadingState />; // ← key fix
+  if (loading && !articles) return <LoadingState />;
 
   if (error) return <ErrorState message={error.message} />;
 
   if (!articles || articles.length === 0) {
-    // ← derive isEmpty locally
     return (
       <EmptyState
         isMyView={isMyView}

@@ -26,6 +26,7 @@ function ArticleCard({ article }: ArticleProps) {
   const { selectArticle } = useArticle();
   const { user, isAuthenticated } = useAuth();
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const tagCount = article.tags?.length ?? 0;
   const tags = article.tags ?? [];
@@ -40,14 +41,19 @@ function ArticleCard({ article }: ArticleProps) {
     refetchQueries: [{ query: GET_ALL_ARTICLES, variables: { tagId: null } }],
   });
 
-  const handleVideoLinkClick = (e: React.MouseEvent) => {
+  const handleVideoLinkClick = (e: React.MouseEvent): void => {
     e.stopPropagation();
     setIsVideoModalOpen(true);
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDeleteClick = (e: React.MouseEvent): void => {
     e.stopPropagation();
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = (): void => {
     deleteArticle({ variables: { id: article.id } });
+    setIsDeleteModalOpen(false);
   };
 
   const isOwner = isAuthenticated && user?.id === article.user.id;
@@ -90,7 +96,7 @@ function ArticleCard({ article }: ArticleProps) {
                 size="xs"
                 colorScheme="red"
                 variant="outline"
-                onClick={handleDelete}
+                onClick={handleDeleteClick}
                 borderRadius="lg"
                 aria-label="Delete article"
                 title="Delete article"
@@ -199,13 +205,54 @@ function ArticleCard({ article }: ArticleProps) {
         </VStack>
       </Box>
 
-     <Modal
-     isOpen ={isVideoModalOpen}
-     onClose={()=>setIsVideoModalOpen(false)}
-     size="lg"
-     >
-      {article.videoUrl && <VideoPlayer src={article.videoUrl}/>}
-     </Modal>
+      <Modal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        size="lg"
+      >
+        {article.videoUrl && <VideoPlayer src={article.videoUrl} />}
+      </Modal>
+
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Delete Article"
+        size="sm"
+      >
+        <VStack gap={4} align="stretch">
+          <Text fontSize="sm" color="gray.600">
+            Are you sure you want to delete this article? This action cannot be
+            undone.
+          </Text>
+
+          <HStack justify="flex-end">
+            <Box
+              as="button"
+              px={4}
+              py={2}
+              borderRadius="md"
+              bg="gray.100"
+              _hover={{ bg: "gray.200" }}
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
+              Cancel
+            </Box>
+
+            <Box
+              as="button"
+              px={4}
+              py={2}
+              borderRadius="md"
+              bg="red.500"
+              color="white"
+              _hover={{ bg: "red.600" }}
+              onClick={confirmDelete} 
+            >
+              Delete
+            </Box>
+          </HStack>
+        </VStack>
+      </Modal>
     </>
   );
 }

@@ -1,9 +1,5 @@
 import { type ReactNode } from "react";
-import {
-  Dialog,
-  Portal,
-  Heading,
-} from "@chakra-ui/react";
+import { Dialog, Portal, Heading } from "@chakra-ui/react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -39,9 +35,7 @@ export function Modal({
                 <Heading size="md">{title}</Heading>
               </Dialog.Header>
             )}
-            <Dialog.Body p={6}>
-              {children}
-            </Dialog.Body>
+            <Dialog.Body p={6}>{children}</Dialog.Body>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

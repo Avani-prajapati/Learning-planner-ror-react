@@ -6,7 +6,7 @@ interface EmptyStateProps {
 }
 
 function EmptyState({ isMyView, selectedArticleType }: EmptyStateProps) {
-  const getMessage = () => {
+  const getMessage = (): string => {
     if (selectedArticleType) {
       return `No ${
         selectedArticleType === "text" ? "text" : "video"

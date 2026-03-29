@@ -16,7 +16,7 @@ export function useFilteredArticles({
   selectedTagId,
   selectedArticleType,
 }: FilterParams) {
-  return useMemo(() => {
+  return useMemo((): Article[] => {
     if (!articles) return [];
 
     let filtered = [...articles];

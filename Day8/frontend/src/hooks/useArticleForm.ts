@@ -19,10 +19,12 @@ const initialState: FormState = {
 export function useArticleForm() {
   const [formState, setFormState] = useState<FormState>(initialState);
 
-  const setField = <K extends keyof FormState>(key: K, value: FormState[K]):void =>
-    setFormState((prev) => ({ ...prev, [key]: value }));
+  const setField = <K extends keyof FormState>(
+    key: K,
+    value: FormState[K],
+  ): void => setFormState((prev) => ({ ...prev, [key]: value }));
 
-  const toggleTag = (id: string):void =>
+  const toggleTag = (id: string): void =>
     setFormState((prev) => ({
       ...prev,
       selectedTagIds: prev.selectedTagIds.includes(id)
@@ -30,7 +32,7 @@ export function useArticleForm() {
         : [...prev.selectedTagIds, id],
     }));
 
-  const setArticleType = (type: "text" | "video"):void =>
+  const setArticleType = (type: "text" | "video"): void =>
     setFormState((prev) => ({
       ...prev,
       articleType: type,
@@ -38,7 +40,7 @@ export function useArticleForm() {
       videoFile: type === "text" ? null : prev.videoFile,
     }));
 
-  const reset = ():void => setFormState(initialState);
+  const reset = (): void => setFormState(initialState);
 
   return { formState, setField, toggleTag, setArticleType, reset };
 }

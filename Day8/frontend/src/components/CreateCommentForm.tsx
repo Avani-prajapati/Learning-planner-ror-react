@@ -36,7 +36,7 @@ function CreateCommentForm() {
     },
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (!body.trim()) return;
     createComment({
       variables: { articleId: selectedArticle?.id, body: body.trim() },

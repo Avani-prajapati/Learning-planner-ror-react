@@ -65,7 +65,6 @@ function App() {
               onTagChange={filters.handleTagChange}
               onTypeChange={filters.handleTypeChange}
               onToggleMyArticles={filters.toggleMyArticles}
-              isAuthenticated={isAuthenticated}
             />
             {isAuthenticated && (
               <Button
@@ -90,12 +89,12 @@ function App() {
 
       <ArticleDetail />
 
-      <CreateArticleForm 
+      <CreateArticleForm
         isOpen={showCreateForm}
-        onClose={() => setShowCreateForm(false)} 
+        onClose={() => setShowCreateForm(false)}
       />
-      
-      <AuthModal 
+
+      <AuthModal
         isOpen={authModal.isOpen}
         onClose={authModal.close}
         defaultTab={authModal.tabOption}

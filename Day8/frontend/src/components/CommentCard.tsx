@@ -16,7 +16,7 @@ export default function CommentCard({ comment }: { comment: Comment }) {
     ],
   });
 
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDelete = (e: React.MouseEvent): void => {
     e.stopPropagation();
     deleteComment({ variables: { id: comment.id } });
   };

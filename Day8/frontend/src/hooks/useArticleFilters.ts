@@ -7,18 +7,18 @@ export function useArticleFilters() {
     null,
   );
 
-  function handleTypeChange(type: string | null):void {
+  function handleTypeChange(type: string | null): void {
     setSelectedArticleType(type);
     setShowMyArticlesOnly(false);
     setSelectedTagId(null);
   }
 
-  function handleTagChange(tagId: string | null):void {
+  function handleTagChange(tagId: string | null): void {
     setSelectedTagId(tagId);
     setShowMyArticlesOnly(false);
   }
 
-  function toggleMyArticles():void {
+  function toggleMyArticles(): void {
     setShowMyArticlesOnly((prev) => !prev);
     setSelectedTagId(null);
     setSelectedArticleType(null);
