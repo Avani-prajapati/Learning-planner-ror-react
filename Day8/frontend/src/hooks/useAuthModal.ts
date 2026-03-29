@@ -5,7 +5,7 @@ export function useAuthModal() {
   const [tabOption, setTabOption] = useState<"signin" | "signup">("signin");
 
   const open = (tab: "signin" | "signup") => {
-    console.log("Opening modal with tab:", tab); // Debug log
+    console.log("Opening modal with tab:", tab);
     setTabOption(tab);
     setIsOpen(true);
   };
