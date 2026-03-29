@@ -8,7 +8,9 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(bio: nil)
-      return {profile: nil, errors: ["Not authenticated"]} unless context[:current_user]
+      if !context[:current_user]
+        return {profile: nil, errors: ["Not authenticated"]}
+      end
 
       profile = context[:current_user].profile || context[:current_user].build_profile
       profile.bio = bio if bio.present?

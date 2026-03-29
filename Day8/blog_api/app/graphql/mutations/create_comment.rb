@@ -10,7 +10,9 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(article_id:, body:, status: "public")
-      return {comment: nil, errors: ["Not authenticated"]} unless context[:current_user]
+      if !context[:current_user]
+        return {comment: nil, errors: ["Not authenticated"]}
+      end
 
       article = Article.find_by(id: article_id)
       return {comment: nil, errors: ["Article not found"]} unless article

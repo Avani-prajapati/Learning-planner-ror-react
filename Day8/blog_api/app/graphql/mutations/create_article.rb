@@ -13,7 +13,9 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(title:, status:, article_type:, body: nil, tag_ids: [], video: nil)
-      return {article: nil, errors: ["Not authenticated"]} unless context[:current_user]
+      if !context[:current_user]
+        return {article: nil, errors: ["Not authenticated"]}
+      end
 
       if article_type == "text" && body.blank?
         return {article: nil, errors: ["Body is required for text articles"]}

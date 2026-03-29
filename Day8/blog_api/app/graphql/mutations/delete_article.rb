@@ -8,7 +8,9 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(id:)
-      return {success: false, errors: ["Not authenticated"]} unless context[:current_user]
+      if !context[:current_user]
+        return {success: false, errors: ["Not authenticated"]}
+      end
 
       article = Article.find_by(id: id)
       return {success: false, errors: ["Article not found"]} unless article
