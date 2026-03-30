@@ -42,4 +42,20 @@ describe("VideoPlayer", () => {
 
     expect(mockedVideojs).not.toHaveBeenCalled();
   });
+
+  test("disposes previous player when src changes", () => {
+    const firstDispose = jest.fn();
+    const secondDispose = jest.fn();
+
+    mockedVideojs
+      .mockReturnValueOnce({ dispose: firstDispose })
+      .mockReturnValueOnce({ dispose: secondDispose });
+
+    const { rerender } = render(<VideoPlayer src="first.mp4" />);
+
+    rerender(<VideoPlayer src="second.mp4" />);
+
+    expect(firstDispose).toHaveBeenCalledTimes(1);
+    expect(mockedVideojs).toHaveBeenCalledTimes(2);
+  });
 });
