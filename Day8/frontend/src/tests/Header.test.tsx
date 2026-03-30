@@ -1,5 +1,5 @@
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import Header from "../components/Header";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -33,5 +33,24 @@ describe("Header", () => {
     expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign up" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Logout" })).not.toBeInTheDocument();
+  });
+
+  test("calls onLogin and onSignup when unauthenticated buttons are clicked", () => {
+    const onLogin = jest.fn();
+    const onSignup = jest.fn();
+
+    mockedUseAuth.mockReturnValue({
+      isAuthenticated: false,
+      user: null,
+      onLogout: jest.fn(),
+    });
+
+    renderHeader(onLogin, onSignup);
+
+    fireEvent.click(screen.getByRole("button", { name: "Login" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
+
+    expect(onLogin).toHaveBeenCalledTimes(1);
+    expect(onSignup).toHaveBeenCalledTimes(1);
   });
 });
