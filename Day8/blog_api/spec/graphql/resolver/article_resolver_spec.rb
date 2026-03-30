@@ -60,4 +60,6 @@ RSpec.describe Resolvers::ArticleResolver do
     expect(result.id).to eq(video_article.id)
     expect(result.article_type).to eq("video")
   end
+
+  
 end
