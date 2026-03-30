@@ -77,4 +77,14 @@ describe("ArticleFilters", () => {
     fireEvent.click(myArticlesButton);
     expect(onToggleMyArticles).toHaveBeenCalledTimes(1);
   });
+
+  test("does not render My Articles button when unauthenticated", () => {
+    mockedUseAuth.mockReturnValue({ isAuthenticated: false });
+
+    renderFilters();
+
+    expect(
+      screen.queryByRole("button", { name: "My Articles" }),
+    ).not.toBeInTheDocument();
+  });
 });
