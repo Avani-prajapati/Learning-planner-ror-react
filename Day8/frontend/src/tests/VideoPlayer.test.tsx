@@ -36,4 +36,10 @@ describe("VideoPlayer", () => {
       sources: [{ src: "https://cdn.example.com/video.mp4", type: "video/mp4" }],
     });
   });
+
+  test("does not initialize video.js when src is empty", () => {
+    render(<VideoPlayer src="" />);
+
+    expect(mockedVideojs).not.toHaveBeenCalled();
+  });
 });
