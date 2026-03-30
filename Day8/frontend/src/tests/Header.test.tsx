@@ -53,4 +53,19 @@ describe("Header", () => {
     expect(onLogin).toHaveBeenCalledTimes(1);
     expect(onSignup).toHaveBeenCalledTimes(1);
   });
+
+  test("renders user name and Logout button when user is authenticated", () => {
+    mockedUseAuth.mockReturnValue({
+      isAuthenticated: true,
+      user: { id: "1", name: "Avani"},
+      onLogout: jest.fn(),
+    });
+
+    renderHeader();
+
+    expect(screen.getByText("Avani")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Logout" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Login" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Sign up" })).not.toBeInTheDocument();
+  });
 });
