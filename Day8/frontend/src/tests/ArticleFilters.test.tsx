@@ -1,5 +1,5 @@
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import ArticleFilters from "../components/ArticleFilters";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -43,5 +43,15 @@ describe("ArticleFilters", () => {
     expect(screen.getByRole("button", { name: "All" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Tech" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "News" })).toBeInTheDocument();
+  });
+
+  test("calls onTagChange with null when All is clicked", () => {
+    mockedUseAuth.mockReturnValue({ isAuthenticated: false });
+    const onTagChange = jest.fn();
+
+    renderFilters({ onTagChange });
+    fireEvent.click(screen.getByRole("button", { name: "All" }));
+
+    expect(onTagChange).toHaveBeenCalledWith(null);
   });
 });
