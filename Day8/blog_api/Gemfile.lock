@@ -118,6 +118,13 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.0)
       tzinfo
+    factory_bot (6.5.6)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.1)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
+    faker (3.6.1)
+      i18n (>= 1.8.11, < 2)
     ffi (1.17.3-aarch64-linux-gnu)
     ffi (1.17.3-aarch64-linux-musl)
     ffi (1.17.3-arm-linux-gnu)
@@ -288,11 +295,18 @@ GEM
     reline (0.6.3)
       io-console (~> 0.5)
     rexml (3.4.4)
+    rspec (3.13.2)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
     rspec-core (3.13.6)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
+    rspec-graphql_response (0.5.0)
+      graphql (>= 1.0)
+      rspec (>= 3.0)
     rspec-mocks (3.13.8)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
@@ -436,6 +450,8 @@ DEPENDENCIES
   bundler-audit
   capybara
   debug
+  factory_bot_rails
+  faker
   graphiql-rails
   graphql
   image_processing (~> 1.2)
@@ -447,6 +463,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rack-cors
   rails (~> 8.1.2)
+  rspec-graphql_response
   rspec-rails (~> 7.0.0)
   rubocop-rails-omakase
   selenium-webdriver
