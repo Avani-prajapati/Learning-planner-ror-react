@@ -58,4 +58,15 @@ describe("VideoPlayer", () => {
     expect(firstDispose).toHaveBeenCalledTimes(1);
     expect(mockedVideojs).toHaveBeenCalledTimes(2);
   });
+
+  test("disposes player on unmount", () => {
+    const dispose = jest.fn();
+    mockedVideojs.mockReturnValue({ dispose });
+
+    const { unmount } = render(<VideoPlayer src="video.mp4" />);
+
+    unmount();
+
+    expect(dispose).toHaveBeenCalledTimes(1);
+  });
 });
