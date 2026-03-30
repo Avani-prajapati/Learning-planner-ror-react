@@ -54,4 +54,14 @@ describe("ArticleFilters", () => {
 
     expect(onTagChange).toHaveBeenCalledWith(null);
   });
+
+  test("calls onTagChange with selected tag id when tag is clicked", () => {
+    mockedUseAuth.mockReturnValue({ isAuthenticated: false });
+    const onTagChange = jest.fn();
+
+    renderFilters({ onTagChange });
+    fireEvent.click(screen.getByRole("button", { name: "Tech" }));
+
+    expect(onTagChange).toHaveBeenCalledWith("1");
+  });
 });
