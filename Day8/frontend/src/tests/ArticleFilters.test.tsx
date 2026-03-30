@@ -71,7 +71,9 @@ describe("ArticleFilters", () => {
 
     renderFilters({ onToggleMyArticles });
 
-    const myArticlesButton = screen.getByRole("button", { name: "My Articles" });
+    const myArticlesButton = screen.getByRole("button", {
+      name: "My Articles",
+    });
     expect(myArticlesButton).toBeInTheDocument();
 
     fireEvent.click(myArticlesButton);
