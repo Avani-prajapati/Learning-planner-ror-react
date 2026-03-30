@@ -41,4 +41,23 @@ RSpec.describe Resolvers::ArticleResolver do
 
     expect(result).to be_nil
   end
+
+  it 'resolves article with video type' do
+    video_article = Article.create!(
+      title: "Video Tutorial",
+      body: "Video content without length restriction",
+      user: user,
+      status: "public",
+      article_type: "video"
+    )
+    
+    result = run_graphql_field(
+      'Query.article',
+      nil,
+      arguments: { id: video_article.id.to_s }
+    )
+    
+    expect(result.id).to eq(video_article.id)
+    expect(result.article_type).to eq("video")
+  end
 end
