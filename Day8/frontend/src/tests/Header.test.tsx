@@ -32,7 +32,9 @@ describe("Header", () => {
 
     expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign up" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Logout" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Logout" }),
+    ).not.toBeInTheDocument();
   });
 
   test("calls onLogin and onSignup when unauthenticated buttons are clicked", () => {
@@ -57,7 +59,7 @@ describe("Header", () => {
   test("renders user name and Logout button when user is authenticated", () => {
     mockedUseAuth.mockReturnValue({
       isAuthenticated: true,
-      user: { id: "1", name: "Avani"},
+      user: { id: "1", name: "Avani" },
       onLogout: jest.fn(),
     });
 
@@ -65,8 +67,12 @@ describe("Header", () => {
 
     expect(screen.getByText("Avani")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Logout" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Login" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Sign up" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Login" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Sign up" }),
+    ).not.toBeInTheDocument();
   });
 
   test("calls onLogout when Logout button is clicked", () => {
@@ -74,7 +80,7 @@ describe("Header", () => {
 
     mockedUseAuth.mockReturnValue({
       isAuthenticated: true,
-      user: { id: "1", name: "Avani"},
+      user: { id: "1", name: "Avani" },
       onLogout,
     });
 

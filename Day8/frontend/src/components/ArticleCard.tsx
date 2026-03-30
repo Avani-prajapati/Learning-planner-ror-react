@@ -246,7 +246,7 @@ function ArticleCard({ article }: ArticleProps) {
               bg="red.500"
               color="white"
               _hover={{ bg: "red.600" }}
-              onClick={confirmDelete} 
+              onClick={confirmDelete}
             >
               Delete
             </Box>
