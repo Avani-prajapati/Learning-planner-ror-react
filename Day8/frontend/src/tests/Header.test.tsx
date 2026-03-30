@@ -68,4 +68,20 @@ describe("Header", () => {
     expect(screen.queryByRole("button", { name: "Login" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Sign up" })).not.toBeInTheDocument();
   });
+
+  test("calls onLogout when Logout button is clicked", () => {
+    const onLogout = jest.fn();
+
+    mockedUseAuth.mockReturnValue({
+      isAuthenticated: true,
+      user: { id: "1", name: "Avani"},
+      onLogout,
+    });
+
+    renderHeader();
+
+    fireEvent.click(screen.getByRole("button", { name: "Logout" }));
+
+    expect(onLogout).toHaveBeenCalledTimes(1);
+  });
 });
