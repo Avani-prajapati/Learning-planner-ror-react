@@ -64,4 +64,17 @@ describe("ArticleFilters", () => {
 
     expect(onTagChange).toHaveBeenCalledWith("1");
   });
+
+  test("shows and handles My Articles button when authenticated", () => {
+    mockedUseAuth.mockReturnValue({ isAuthenticated: true });
+    const onToggleMyArticles = jest.fn();
+
+    renderFilters({ onToggleMyArticles });
+
+    const myArticlesButton = screen.getByRole("button", { name: "My Articles" });
+    expect(myArticlesButton).toBeInTheDocument();
+
+    fireEvent.click(myArticlesButton);
+    expect(onToggleMyArticles).toHaveBeenCalledTimes(1);
+  });
 });
