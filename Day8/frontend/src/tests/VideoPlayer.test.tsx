@@ -33,7 +33,9 @@ describe("VideoPlayer", () => {
       fluid: true,
       autoplay: false,
       preload: "auto",
-      sources: [{ src: "https://cdn.example.com/video.mp4", type: "video/mp4" }],
+      sources: [
+        { src: "https://cdn.example.com/video.mp4", type: "video/mp4" },
+      ],
     });
   });
 
