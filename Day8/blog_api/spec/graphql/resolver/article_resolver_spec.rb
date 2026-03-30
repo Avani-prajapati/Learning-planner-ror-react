@@ -61,5 +61,13 @@ RSpec.describe Resolvers::ArticleResolver do
     expect(result.article_type).to eq("video")
   end
 
-  
+  it 'returns nil for empty string id' do
+    result = run_graphql_field(
+      'Query.article',
+      nil,
+      arguments: { id: '' }
+    )
+    
+    expect(result).to be_nil
+  end
 end
