@@ -2,16 +2,40 @@ import ArticleDetail from "../components/ArticleDetail";
 import { useArticle } from "../contexts/ArticleContext";
 import { useAuth } from "../contexts/AuthContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
-import { mockArticleContextClosed, mockArticleContextOpen, mockAuthContextAuthenticated, mockAuthContextGuest } from "../__mocks__/contextMocks";
-import { MockVideoPlayer, MockAddCommentForm, MockCommentCard } from "../__mocks__/compoentMocks";
-import { getArticleErrorMock, getArticleLoadingMock, getArticleSuccessMock, getArticleWithCommentsMock } from "../__mocks__/apolloMocks";
+import {
+  mockArticleContextClosed,
+  mockArticleContextOpen,
+  mockAuthContextAuthenticated,
+  mockAuthContextGuest,
+} from "../__mocks__/contextMocks";
+import {
+  MockVideoPlayer,
+  MockAddCommentForm,
+  MockCommentCard,
+} from "../__mocks__/compoentMocks";
+import {
+  getArticleErrorMock,
+  getArticleLoadingMock,
+  getArticleSuccessMock,
+  getArticleWithCommentsMock,
+} from "../__mocks__/apolloMocks";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 
 jest.mock("../contexts/ArticleContext", () => ({ useArticle: jest.fn() }));
 jest.mock("../contexts/AuthContext", () => ({ useAuth: jest.fn() }));
-jest.mock("../components/VideoPlayer", () => ({ src }: { src: string }) => MockVideoPlayer({ src }));
+jest.mock(
+  "../components/VideoPlayer",
+  () =>
+    ({ src }: { src: string }) =>
+      MockVideoPlayer({ src }),
+);
 jest.mock("../components/CreateCommentForm", () => () => MockAddCommentForm());
-jest.mock("../components/CommentCard", () => ({ comment }: { comment: { body: string } }) => MockCommentCard({ comment }));
+jest.mock(
+  "../components/CommentCard",
+  () =>
+    ({ comment }: { comment: { body: string } }) =>
+      MockCommentCard({ comment }),
+);
 
 const mockedUseArticle = useArticle as jest.Mock;
 const mockedUseAuth = useAuth as jest.Mock;
@@ -44,7 +68,9 @@ describe("ArticleDetail", () => {
     renderWithProviders(<ArticleDetail />, [getArticleErrorMock("1")]);
 
     await waitFor(() => {
-      expect(screen.getByText("Error: Failed to fetch article")).toBeInTheDocument();
+      expect(
+        screen.getByText("Error: Failed to fetch article"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -78,7 +104,10 @@ describe("ArticleDetail", () => {
     await waitFor(() => {
       const player = screen.getByTestId("video-player");
       expect(player).toBeInTheDocument();
-      expect(player).toHaveAttribute("data-src", "https://cdn.example.com/video.mp4");
+      expect(player).toHaveAttribute(
+        "data-src",
+        "https://cdn.example.com/video.mp4",
+      );
     });
   });
 
@@ -156,4 +185,3 @@ describe("ArticleDetail", () => {
     expect(closeDetail).toHaveBeenCalledTimes(1);
   });
 });
-
