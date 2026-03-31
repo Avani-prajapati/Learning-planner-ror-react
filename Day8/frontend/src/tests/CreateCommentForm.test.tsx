@@ -3,6 +3,7 @@ import CreateCommentForm from "../components/CreateCommentForm";
 import { useArticle } from "../contexts/ArticleContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
 import {
+    createCommentNetworkErrorMock,
     createCommentServerErrorMock,
   createCommentSuccessMock,
   refetchArticleMock,
@@ -69,6 +70,20 @@ describe("CreateCommentForm", () => {
     await waitFor(() => {
       expect(screen.getByText(/not authenticated/i)).toBeInTheDocument();
       expect(screen.getByText(/please login/i)).toBeInTheDocument();
+    });
+  });
+
+  test("shows network error message when mutation fails with network error", async () => {
+    renderWithProviders(<CreateCommentForm />, [
+      createCommentNetworkErrorMock("1", "Hello world"),
+    ]);
+
+    const textarea = screen.getByPlaceholderText("Write your comment...");
+    fireEvent.change(textarea, { target: { value: "Hello world" } });
+    fireEvent.click(screen.getByRole("button", { name: /add comment/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Network error")).toBeInTheDocument();
     });
   });
 });
