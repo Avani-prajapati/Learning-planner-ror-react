@@ -2,7 +2,7 @@ import React from "react";
 import { fireEvent, screen, waitFor} from "@testing-library/react";
 import CreateArticleForm from "../components/CreateArticleForm";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
-import { createArticleSuccessMock, tagsQueryMock } from "../__mocks__/articleFormMocks";
+import { createArticleErrorMock, createArticleSuccessMock, tagsQueryMock } from "../__mocks__/articleFormMocks";
 
 jest.mock("../components/ui/Modal", () => ({
   __esModule: true,
@@ -119,6 +119,38 @@ describe("CreateArticleForm", () => {
 
     await waitFor(() => {
       expect(onClose).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  test("displays server error message when mutation returns errors", async () => {
+    const variables = {
+      title: "Test Article",
+      body: "Test body",
+      status: "public",
+      articleType: "text",
+      tagIds: [],
+      video: null,
+    };
+
+    renderWithProviders(
+      <CreateArticleForm {...defaultProps} />,
+      [tagsQueryMock, createArticleErrorMock(variables)]
+    );
+
+    fireEvent.change(
+      await screen.findByPlaceholderText("Enter Article title..."),
+      { target: { value: "Test Article" } }
+    );
+
+    fireEvent.change(
+      screen.getByPlaceholderText("Write your Article content..."),
+      { target: { value: "Test body" } }
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /create article/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Title can't be blank")).toBeInTheDocument();
     });
   });
 });

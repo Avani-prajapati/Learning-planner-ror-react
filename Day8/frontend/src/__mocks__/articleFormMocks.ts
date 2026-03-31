@@ -31,3 +31,18 @@ export const createArticleSuccessMock = (variables = {}): MockLink.MockedRespons
       },
     },
   });
+
+  export const createArticleErrorMock = (variables = {}): MockLink.MockedResponse => ({
+    request: {
+      query: CREATE_ARTICLE,
+      variables,
+    },
+    result: {
+      data: {
+        createArticle: {
+          article: null,
+          errors: ["Title can't be blank"],
+        },
+      },
+    },
+  });
