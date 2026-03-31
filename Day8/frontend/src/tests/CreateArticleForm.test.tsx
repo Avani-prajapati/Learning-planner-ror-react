@@ -63,4 +63,15 @@ describe("CreateArticleForm", () => {
       expect(screen.getByText("TypeScript")).toBeInTheDocument();
     });
   });
+
+  test("shows body textarea by default for text article type", async () => {
+    renderWithProviders(<CreateArticleForm {...defaultProps} />, [tagsQueryMock]);
+
+    await waitFor(() => {
+      expect(
+        screen.getByPlaceholderText("Write your Article content...")
+      ).toBeInTheDocument();
+      expect(screen.queryByLabelText(/video file/i)).not.toBeInTheDocument();
+    });
+  });
 });
