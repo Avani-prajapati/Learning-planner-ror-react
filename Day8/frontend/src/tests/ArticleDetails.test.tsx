@@ -140,5 +140,20 @@ describe("ArticleDetail", () => {
 
     expect(closeDetail).toHaveBeenCalledTimes(1);
   });
+
+  test("calls closeDetail when the backdrop overlay is clicked", async () => {
+    const closeDetail = jest.fn();
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1", closeDetail));
+
+    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Article Details")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId("backdrop"));
+
+    expect(closeDetail).toHaveBeenCalledTimes(1);
+  });
 });
 
