@@ -35,6 +35,7 @@ function ArticleDetail() {
 
   return (
     <Box
+      data-testid="backdrop"
       position="fixed"
       inset={0}
       bg="blackAlpha.600"
