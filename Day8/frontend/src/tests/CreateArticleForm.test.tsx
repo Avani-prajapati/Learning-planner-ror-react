@@ -74,4 +74,18 @@ describe("CreateArticleForm", () => {
       expect(screen.queryByLabelText(/video file/i)).not.toBeInTheDocument();
     });
   });
+
+  test("shows video file input when video article type is selected", async () => {
+    renderWithProviders(<CreateArticleForm {...defaultProps} />, [tagsQueryMock]);
+
+    const videoButton = await screen.findByRole("button", { name: /video/i });
+    fireEvent.click(videoButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("Video File")).toBeInTheDocument();
+      expect(
+        screen.queryByPlaceholderText("Write your Article content...")
+      ).not.toBeInTheDocument();
+    });
+  });
 });
