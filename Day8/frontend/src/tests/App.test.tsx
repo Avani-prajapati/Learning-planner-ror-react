@@ -43,6 +43,11 @@ jest.mock("../components/ArticleList", () => ({
   },
 }));
 
+jest.mock("../components/ArticleFilters", () => ({
+    __esModule: true,
+    default: () => <div data-testid="article-filters" />,
+}));
+
 const mockedUseAuth = useAuth as jest.Mock;
 const guestAuth = { isAuthenticated: false, user: null };
 const authenticatedAuth = { isAuthenticated: true, user: { id: "1", name: "Avani" } };
@@ -153,5 +158,11 @@ describe("App Integration Tests", () => {
     const modal = screen.getByTestId("auth-modal");
     expect(modal).toBeInTheDocument();
     expect(modal).toHaveAttribute("data-tab", "signup");
+  });
+
+  test("renders article filters after articles load", async () => {
+    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
+  
+    expect(await screen.findByTestId("article-filters")).toBeInTheDocument();
   });
 });
