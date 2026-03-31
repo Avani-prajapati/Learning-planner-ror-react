@@ -2,7 +2,7 @@ import ArticleDetail from "../components/ArticleDetail";
 import { useArticle } from "../contexts/ArticleContext";
 import { useAuth } from "../contexts/AuthContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
-import { mockArticleContextClosed, mockArticleContextOpen, mockAuthContextGuest } from "../__mocks__/contextMocks";
+import { mockArticleContextClosed, mockArticleContextOpen, mockAuthContextAuthenticated, mockAuthContextGuest } from "../__mocks__/contextMocks";
 import { MockVideoPlayer, MockAddCommentForm, MockCommentCard } from "../__mocks__/compoentMocks";
 import { getArticleErrorMock, getArticleLoadingMock, getArticleSuccessMock, getArticleWithCommentsMock } from "../__mocks__/apolloMocks";
 import { screen, waitFor } from "@testing-library/react";
@@ -112,6 +112,17 @@ describe("ArticleDetail", () => {
 
     await waitFor(() => {
       expect(screen.queryByTestId("add-comment-form")).not.toBeInTheDocument();
+    });
+  });
+
+  test("renders AddCommentForm when user is authenticated", async () => {
+    mockedUseAuth.mockReturnValue(mockAuthContextAuthenticated);
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+
+    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("add-comment-form")).toBeInTheDocument();
     });
   });
 });
