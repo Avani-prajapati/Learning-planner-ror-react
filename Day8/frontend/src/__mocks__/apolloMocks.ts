@@ -6,4 +6,9 @@ export const getArticleLoadingMock = (id: string): MockLink.MockedResponse => ({
     request: { query: GET_ARTICLE, variables: { id } },
     result: { data: { article: mockTextArticle } },
     delay: 500,
-  });
+});
+
+export const getArticleErrorMock = (id: string): MockLink.MockedResponse => ({
+    request: { query: GET_ARTICLE, variables: { id } },
+    error: new Error("Failed to fetch article"),
+});  
