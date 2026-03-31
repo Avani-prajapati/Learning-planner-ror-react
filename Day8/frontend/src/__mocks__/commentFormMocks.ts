@@ -60,12 +60,12 @@ export const createCommentServerErrorMock = (
 });
 
 export const createCommentNetworkErrorMock = (
-    articleId: string,
-    body: string
-  ): MockLink.MockedResponse => ({
-    request: {
-      query: CREATE_COMMENT,
-      variables: { articleId, body },
-    },
-    error: new Error("Network error"),
+  articleId: string,
+  body: string,
+): MockLink.MockedResponse => ({
+  request: {
+    query: CREATE_COMMENT,
+    variables: { articleId, body },
+  },
+  error: new Error("Network error"),
 });

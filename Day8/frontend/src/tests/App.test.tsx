@@ -1,12 +1,13 @@
-import { screen} from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import App from "../App";
 import { useAuth } from "../contexts/AuthContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
 import {
+  getAllArticlesErrorMock,
   getAllArticlesLoadingMock,
+  getAllArticlesSuccessMock,
   getTagsMock,
 } from "../__mocks__/appMocks";
-
 
 jest.mock("../contexts/AuthContext", () => ({ useAuth: jest.fn() }));
 
@@ -28,9 +29,18 @@ jest.mock("../components/AuthModal", () => ({
 }));
 
 jest.mock("../components/ArticleList", () => ({
-    __esModule: true,
-    default: ({ loading }: { loading: boolean }) =>
-      loading ? <div data-testid="loading" /> : <div>Loaded</div>,
+  __esModule: true,
+  default: ({ loading, error, articles }: any) => {
+    if (loading) return <div data-testid="loading" />;
+    if (error) return <div data-testid="error">Error occurred</div>;
+    return (
+      <div>
+        {articles?.map((a: any) => (
+          <p key={a.id}>{a.title}</p>
+        ))}
+      </div>
+    );
+  },
 }));
 
 const mockedUseAuth = useAuth as jest.Mock;
@@ -53,5 +63,20 @@ describe("App Integration Tests", () => {
     renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
 
     expect(screen.getByTestId("loading")).toBeInTheDocument();
+  });
+
+  test("displays error when article fetch fails", async () => {
+    renderWithProviders(<App />, [getAllArticlesErrorMock, getTagsMock]);
+
+    expect(await screen.findByTestId("error")).toBeInTheDocument();
+  });
+
+  test("renders article list after successful fetch", async () => {
+    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
+
+    await waitFor(() => {
+      expect(screen.getByText("First Article")).toBeInTheDocument();
+      expect(screen.getByText("Second Article")).toBeInTheDocument();
+    });
   });
 });
