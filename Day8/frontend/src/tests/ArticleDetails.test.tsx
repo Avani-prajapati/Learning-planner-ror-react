@@ -69,5 +69,17 @@ describe("ArticleDetail", () => {
       expect(screen.queryByTestId("video-player")).not.toBeInTheDocument();
     });
   });
+
+  test("renders VideoPlayer with correct src for video type articles", async () => {
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("2"));
+
+    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("2")]);
+
+    await waitFor(() => {
+      const player = screen.getByTestId("video-player");
+      expect(player).toBeInTheDocument();
+      expect(player).toHaveAttribute("data-src", "https://cdn.example.com/video.mp4");
+    });
+  });
 });
 
