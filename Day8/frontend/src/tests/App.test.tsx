@@ -45,6 +45,7 @@ jest.mock("../components/ArticleList", () => ({
 
 const mockedUseAuth = useAuth as jest.Mock;
 const guestAuth = { isAuthenticated: false, user: null };
+const authenticatedAuth = { isAuthenticated: true, user: { id: "1", name: "Avani" } };
 
 describe("App Integration Tests", () => {
   beforeEach(() => {
@@ -77,6 +78,30 @@ describe("App Integration Tests", () => {
     await waitFor(() => {
       expect(screen.getByText("First Article")).toBeInTheDocument();
       expect(screen.getByText("Second Article")).toBeInTheDocument();
+    });
+  });
+
+  test("hides Add Article button for unauthenticated users", async () => {
+    mockedUseAuth.mockReturnValue(guestAuth);
+    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
+
+    await waitFor(() => {
+      expect(screen.getByText("First Article")).toBeInTheDocument();
+    });
+
+    expect(
+      screen.queryByRole("button", { name: /add article/i })
+    ).not.toBeInTheDocument();
+  });
+
+  test("shows Add Article button for authenticated users", async () => {
+    mockedUseAuth.mockReturnValue(authenticatedAuth);
+    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: /add article/i })
+      ).toBeInTheDocument();
     });
   });
 });
