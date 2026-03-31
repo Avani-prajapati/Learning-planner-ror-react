@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
 import { mockArticleContextClosed, mockArticleContextOpen, mockAuthContextGuest } from "../__mocks__/contextMocks";
 import { MockVideoPlayer, MockAddCommentForm, MockCommentCard } from "../__mocks__/compoentMocks";
-import { getArticleErrorMock, getArticleLoadingMock } from "../__mocks__/apolloMocks";
+import { getArticleErrorMock, getArticleLoadingMock, getArticleSuccessMock } from "../__mocks__/apolloMocks";
 import { screen, waitFor } from "@testing-library/react";
 
 jest.mock("../contexts/ArticleContext", () => ({ useArticle: jest.fn() }));
@@ -45,6 +45,17 @@ describe("ArticleDetail", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Error: Failed to fetch article")).toBeInTheDocument();
+    });
+  });
+
+  test("renders article title and id badge after successful fetch", async () => {
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+
+    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Test Article")).toBeInTheDocument();
+      expect(screen.getByText("Article #1")).toBeInTheDocument();
     });
   });
 });
