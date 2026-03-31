@@ -58,5 +58,16 @@ describe("ArticleDetail", () => {
       expect(screen.getByText("Article #1")).toBeInTheDocument();
     });
   });
+
+  test("renders article body text for text type articles", async () => {
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+
+    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+
+    await waitFor(() => {
+      expect(screen.getByText("This is the article body.")).toBeInTheDocument();
+      expect(screen.queryByTestId("video-player")).not.toBeInTheDocument();
+    });
+  });
 });
 
