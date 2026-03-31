@@ -2,8 +2,10 @@ import ArticleDetail from "../components/ArticleDetail";
 import { useArticle } from "../contexts/ArticleContext";
 import { useAuth } from "../contexts/AuthContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
-import { mockArticleContextClosed, mockAuthContextGuest } from "../__mocks__/contextMocks";
+import { mockArticleContextClosed, mockArticleContextOpen, mockAuthContextGuest } from "../__mocks__/contextMocks";
 import { MockVideoPlayer, MockAddCommentForm, MockCommentCard } from "../__mocks__/compoentMocks";
+import { getArticleLoadingMock } from "../__mocks__/apolloMocks";
+import { screen } from "@testing-library/react";
 
 jest.mock("../contexts/ArticleContext", () => ({ useArticle: jest.fn() }));
 jest.mock("../contexts/AuthContext", () => ({ useAuth: jest.fn() }));
@@ -26,5 +28,13 @@ describe("ArticleDetail", () => {
     const { container } = renderWithProviders(<ArticleDetail />);
 
     expect(container).toBeEmptyDOMElement();
+  });
+
+  test("shows loading spinner while article is being fetched", () => {
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+
+    renderWithProviders(<ArticleDetail />, [getArticleLoadingMock("1")]);
+
+    expect(screen.getByText("Loading...")).toBeInTheDocument();
   });
 });
