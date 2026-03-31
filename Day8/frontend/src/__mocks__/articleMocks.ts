@@ -15,3 +15,8 @@ export const mockVideoArticle = {
     videoUrl: "https://cdn.example.com/video.mp4",
     comments: [],
 };
+
+export const mockComments = [
+    { id: "c1", body: "First comment", user: { name: "Alice" } },
+    { id: "c2", body: "Second comment", user: { name: "Bob" } },
+];

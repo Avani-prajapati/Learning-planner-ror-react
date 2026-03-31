@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
 import { mockArticleContextClosed, mockArticleContextOpen, mockAuthContextGuest } from "../__mocks__/contextMocks";
 import { MockVideoPlayer, MockAddCommentForm, MockCommentCard } from "../__mocks__/compoentMocks";
-import { getArticleErrorMock, getArticleLoadingMock, getArticleSuccessMock } from "../__mocks__/apolloMocks";
+import { getArticleErrorMock, getArticleLoadingMock, getArticleSuccessMock, getArticleWithCommentsMock } from "../__mocks__/apolloMocks";
 import { screen, waitFor } from "@testing-library/react";
 
 jest.mock("../contexts/ArticleContext", () => ({ useArticle: jest.fn() }));
@@ -89,6 +89,29 @@ describe("ArticleDetail", () => {
 
     await waitFor(() => {
       expect(screen.getByText("No comments yet.")).toBeInTheDocument();
+    });
+  });
+
+  test("renders a CommentCard for each comment in the article", async () => {
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+
+    renderWithProviders(<ArticleDetail />, [getArticleWithCommentsMock("1")]);
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId("comment-card")).toHaveLength(2);
+      expect(screen.getByText("First comment")).toBeInTheDocument();
+      expect(screen.getByText("Second comment")).toBeInTheDocument();
+    });
+  });
+
+  test("does not render AddCommentForm when user is not authenticated", async () => {
+    mockedUseAuth.mockReturnValue(mockAuthContextGuest);
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+
+    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("add-comment-form")).not.toBeInTheDocument();
     });
   });
 });
