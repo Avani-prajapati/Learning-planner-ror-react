@@ -38,4 +38,14 @@ describe("CreateArticleForm", () => {
       expect(screen.getByPlaceholderText("Enter Article title...")).toBeInTheDocument();
     });
   });
+
+  test("renders nothing when modal is closed", () => {
+    renderWithProviders(
+      <CreateArticleForm isOpen={false} onClose={jest.fn()} />,
+      [tagsQueryMock]
+    );
+
+    expect(screen.queryByText("Create New Article")).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Enter Article title...")).not.toBeInTheDocument();
+  });
 });
