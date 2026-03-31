@@ -3,8 +3,8 @@ import CreateCommentForm from "../components/CreateCommentForm";
 import { useArticle } from "../contexts/ArticleContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
 import {
-    createCommentNetworkErrorMock,
-    createCommentServerErrorMock,
+  createCommentNetworkErrorMock,
+  createCommentServerErrorMock,
   createCommentSuccessMock,
   refetchArticleMock,
 } from "../__mocks__/commentFormMocks";
