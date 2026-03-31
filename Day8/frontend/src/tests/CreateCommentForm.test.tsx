@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import CreateCommentForm from "../components/CreateCommentForm";
 import { useArticle } from "../contexts/ArticleContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
@@ -26,5 +26,16 @@ describe("CreateCommentForm", () => {
     expect(
       screen.getByRole("button", { name: /add comment/i })
     ).toBeDisabled();
+  });
+
+  test("enables Add Comment button when textarea is not empty", () => {
+    renderWithProviders(<CreateCommentForm />);
+
+    const textarea = screen.getByPlaceholderText("Write your comment...");
+    fireEvent.change(textarea, { target: { value: "Hello world" } });
+
+    expect(
+      screen.getByRole("button", { name: /add comment/i })
+    ).not.toBeDisabled();
   });
 });
