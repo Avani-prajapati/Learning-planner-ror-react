@@ -81,5 +81,15 @@ describe("ArticleDetail", () => {
       expect(player).toHaveAttribute("data-src", "https://cdn.example.com/video.mp4");
     });
   });
+
+  test("shows no comments message when article has no comments", async () => {
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+
+    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+
+    await waitFor(() => {
+      expect(screen.getByText("No comments yet.")).toBeInTheDocument();
+    });
+  });
 });
 
