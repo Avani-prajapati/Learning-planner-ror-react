@@ -2,7 +2,11 @@ import { fireEvent, screen, waitFor } from "@testing-library/react";
 import CreateCommentForm from "../components/CreateCommentForm";
 import { useArticle } from "../contexts/ArticleContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
-import { createCommentSuccessMock, refetchArticleMock } from "../__mocks__/commentFormMocks";
+import {
+    createCommentServerErrorMock,
+  createCommentSuccessMock,
+  refetchArticleMock,
+} from "../__mocks__/commentFormMocks";
 
 jest.mock("../contexts/ArticleContext", () => ({ useArticle: jest.fn() }));
 
@@ -22,11 +26,9 @@ describe("CreateCommentForm", () => {
     renderWithProviders(<CreateCommentForm />);
 
     expect(
-      screen.getByPlaceholderText("Write your comment...")
+      screen.getByPlaceholderText("Write your comment..."),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /add comment/i })
-    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: /add comment/i })).toBeDisabled();
   });
 
   test("enables Add Comment button when textarea is not empty", () => {
@@ -36,7 +38,7 @@ describe("CreateCommentForm", () => {
     fireEvent.change(textarea, { target: { value: "Hello world" } });
 
     expect(
-      screen.getByRole("button", { name: /add comment/i })
+      screen.getByRole("button", { name: /add comment/i }),
     ).not.toBeDisabled();
   });
 
@@ -52,6 +54,21 @@ describe("CreateCommentForm", () => {
 
     await waitFor(() => {
       expect(textarea).toHaveValue("");
+    });
+  });
+
+  test("shows server error message when mutation returns errors", async () => {
+    renderWithProviders(<CreateCommentForm />, [
+      createCommentServerErrorMock("1", "Hello world"),
+    ]);
+
+    const textarea = screen.getByPlaceholderText("Write your comment...");
+    fireEvent.change(textarea, { target: { value: "Hello world" } });
+    fireEvent.click(screen.getByRole("button", { name: /add comment/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/not authenticated/i)).toBeInTheDocument();
+      expect(screen.getByText(/please login/i)).toBeInTheDocument();
     });
   });
 });
