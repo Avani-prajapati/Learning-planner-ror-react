@@ -128,4 +128,30 @@ describe("App Integration Tests", () => {
 
     expect(screen.getByTestId("create-article-form")).toBeInTheDocument();
   });
+
+  test("auth modal is hidden initially", () => {
+    renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
+
+    expect(screen.queryByTestId("auth-modal")).not.toBeInTheDocument();
+  });
+
+  test("opens auth modal with signin tab when Login button is clicked", () => {
+    renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Login" }));
+
+    const modal = screen.getByTestId("auth-modal");
+    expect(modal).toBeInTheDocument();
+    expect(modal).toHaveAttribute("data-tab", "signin");
+  });
+
+  test("opens auth modal with signup tab when Sign up button is clicked", () => {
+    renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
+
+    const modal = screen.getByTestId("auth-modal");
+    expect(modal).toBeInTheDocument();
+    expect(modal).toHaveAttribute("data-tab", "signup");
+  });
 });
