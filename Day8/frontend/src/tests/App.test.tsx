@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import App from "../App";
 import { useAuth } from "../contexts/AuthContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
@@ -103,5 +103,29 @@ describe("App Integration Tests", () => {
         screen.getByRole("button", { name: /add article/i })
       ).toBeInTheDocument();
     });
+  });
+
+  test("create form is hidden initially", async () => {
+    mockedUseAuth.mockReturnValue(authenticatedAuth);
+    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /add article/i })).toBeInTheDocument();
+    });
+
+    expect(screen.queryByTestId("create-article-form")).not.toBeInTheDocument();
+  });
+
+  test("opens create form when Add Article button is clicked", async () => {
+    mockedUseAuth.mockReturnValue(authenticatedAuth);
+    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /add article/i })).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /add article/i }));
+
+    expect(screen.getByTestId("create-article-form")).toBeInTheDocument();
   });
 });
