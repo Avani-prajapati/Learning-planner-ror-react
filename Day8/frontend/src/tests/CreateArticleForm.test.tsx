@@ -185,4 +185,18 @@ describe("CreateArticleForm", () => {
       expect(screen.getByText("Network error")).toBeInTheDocument();
     });
   });
+
+  test("calls onClose when cancel button is clicked without submitting", async () => {
+    const onClose = jest.fn();
+
+    renderWithProviders(
+      <CreateArticleForm isOpen={true} onClose={onClose} />,
+      [tagsQueryMock]
+    );
+
+    const cancelButton = await screen.findByRole("button", { name: /cancel/i });
+    fireEvent.click(cancelButton);
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 });
