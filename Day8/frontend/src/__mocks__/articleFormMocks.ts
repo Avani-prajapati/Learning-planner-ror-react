@@ -32,7 +32,7 @@ export const createArticleSuccessMock = (variables = {}): MockLink.MockedRespons
     },
   });
 
-  export const createArticleErrorMock = (variables = {}): MockLink.MockedResponse => ({
+export const createArticleErrorMock = (variables = {}): MockLink.MockedResponse => ({
     request: {
       query: CREATE_ARTICLE,
       variables,
@@ -45,4 +45,12 @@ export const createArticleSuccessMock = (variables = {}): MockLink.MockedRespons
         },
       },
     },
-  });
+});
+
+export const createArticleNetworkErrorMock = (variables = {}): MockLink.MockedResponse => ({
+    request: {
+      query: CREATE_ARTICLE,
+      variables,
+    },
+    error: new Error("Network error"),
+});  

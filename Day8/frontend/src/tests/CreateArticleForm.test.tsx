@@ -2,7 +2,7 @@ import React from "react";
 import { fireEvent, screen, waitFor} from "@testing-library/react";
 import CreateArticleForm from "../components/CreateArticleForm";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
-import { createArticleErrorMock, createArticleSuccessMock, tagsQueryMock } from "../__mocks__/articleFormMocks";
+import { createArticleErrorMock, createArticleNetworkErrorMock, createArticleSuccessMock, tagsQueryMock } from "../__mocks__/articleFormMocks";
 
 jest.mock("../components/ui/Modal", () => ({
   __esModule: true,
@@ -151,6 +151,38 @@ describe("CreateArticleForm", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Title can't be blank")).toBeInTheDocument();
+    });
+  });
+
+  test("displays network error message when mutation fails with network error", async () => {
+    const variables = {
+      title: "Test Article",
+      body: "Test body",
+      status: "public",
+      articleType: "text",
+      tagIds: [],
+      video: null,
+    };
+
+    renderWithProviders(
+      <CreateArticleForm {...defaultProps} />,
+      [tagsQueryMock, createArticleNetworkErrorMock(variables)]
+    );
+
+    fireEvent.change(
+      await screen.findByPlaceholderText("Enter Article title..."),
+      { target: { value: "Test Article" } }
+    );
+
+    fireEvent.change(
+      screen.getByPlaceholderText("Write your Article content..."),
+      { target: { value: "Test body" } }
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /create article/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Network error")).toBeInTheDocument();
     });
   });
 });
