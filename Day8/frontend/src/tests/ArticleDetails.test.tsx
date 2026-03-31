@@ -5,7 +5,7 @@ import { renderWithProviders } from "../__mocks__/renderWithProvider";
 import { mockArticleContextClosed, mockArticleContextOpen, mockAuthContextAuthenticated, mockAuthContextGuest } from "../__mocks__/contextMocks";
 import { MockVideoPlayer, MockAddCommentForm, MockCommentCard } from "../__mocks__/compoentMocks";
 import { getArticleErrorMock, getArticleLoadingMock, getArticleSuccessMock, getArticleWithCommentsMock } from "../__mocks__/apolloMocks";
-import { screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 
 jest.mock("../contexts/ArticleContext", () => ({ useArticle: jest.fn() }));
 jest.mock("../contexts/AuthContext", () => ({ useAuth: jest.fn() }));
@@ -124,6 +124,21 @@ describe("ArticleDetail", () => {
     await waitFor(() => {
       expect(screen.getByTestId("add-comment-form")).toBeInTheDocument();
     });
+  });
+
+  test("calls closeDetail when the Close button is clicked", async () => {
+    const closeDetail = jest.fn();
+    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1", closeDetail));
+
+    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+
+    expect(closeDetail).toHaveBeenCalledTimes(1);
   });
 });
 
