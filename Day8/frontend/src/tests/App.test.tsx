@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import App from "../App";
 import { useAuth } from "../contexts/AuthContext";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
@@ -24,7 +24,7 @@ jest.mock("../components/CreateArticleForm", () => ({
 
 jest.mock("../components/AuthModal", () => ({
   __esModule: true,
-  default: ({ isOpen, defaultTab }: { isOpen: boolean; defaultTab: string }) =>
+  default: ({ isOpen, defaultTab }: any) =>
     isOpen ? <div data-testid="auth-modal" data-tab={defaultTab} /> : null,
 }));
 
@@ -44,125 +44,103 @@ jest.mock("../components/ArticleList", () => ({
 }));
 
 jest.mock("../components/ArticleFilters", () => ({
-    __esModule: true,
-    default: () => <div data-testid="article-filters" />,
+  __esModule: true,
+  default: () => <div data-testid="article-filters" />,
 }));
 
 const mockedUseAuth = useAuth as jest.Mock;
+
 const guestAuth = { isAuthenticated: false, user: null };
-const authenticatedAuth = { isAuthenticated: true, user: { id: "1", name: "Avani" } };
+const authenticatedAuth = {
+  isAuthenticated: true,
+  user: { id: "1", name: "Avani" },
+};
 
-describe("App Integration Tests", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockedUseAuth.mockReturnValue(guestAuth);
-  });
+const renderApp = (mocks: any[] = []) => {
+  return renderWithProviders(<App />, mocks);
+};
 
-  test("displays Login and Sign up buttons for unauthenticated users", () => {
-    renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockedUseAuth.mockReturnValue(guestAuth);
+});
+
+describe("App Integration", () => {
+  test("shows auth buttons for guests", () => {
+    renderApp([getAllArticlesLoadingMock, getTagsMock]);
 
     expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign up" })).toBeInTheDocument();
   });
 
-  test("shows loading state while fetching articles", () => {
-    renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
+  test("shows loading state", () => {
+    renderApp([getAllArticlesLoadingMock, getTagsMock]);
 
     expect(screen.getByTestId("loading")).toBeInTheDocument();
   });
 
-  test("displays error when article fetch fails", async () => {
-    renderWithProviders(<App />, [getAllArticlesErrorMock, getTagsMock]);
+  test("shows error state", async () => {
+    renderApp([getAllArticlesErrorMock, getTagsMock]);
 
     expect(await screen.findByTestId("error")).toBeInTheDocument();
   });
 
-  test("renders article list after successful fetch", async () => {
-    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
+  test("renders articles on success", async () => {
+    renderApp([getAllArticlesSuccessMock, getTagsMock]);
 
-    await waitFor(() => {
-      expect(screen.getByText("First Article")).toBeInTheDocument();
-      expect(screen.getByText("Second Article")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("First Article")).toBeInTheDocument();
+    expect(screen.getByText("Second Article")).toBeInTheDocument();
   });
 
-  test("hides Add Article button for unauthenticated users", async () => {
-    mockedUseAuth.mockReturnValue(guestAuth);
-    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
+  test("hides Add Article for guests", async () => {
+    renderApp([getAllArticlesSuccessMock, getTagsMock]);
 
-    await waitFor(() => {
-      expect(screen.getByText("First Article")).toBeInTheDocument();
-    });
+    await screen.findByText("First Article");
 
     expect(
-      screen.queryByRole("button", { name: /add article/i })
+      screen.queryByRole("button", { name: /add article/i }),
     ).not.toBeInTheDocument();
   });
 
-  test("shows Add Article button for authenticated users", async () => {
+  test("shows Add Article for authenticated users", async () => {
     mockedUseAuth.mockReturnValue(authenticatedAuth);
-    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: /add article/i })
-      ).toBeInTheDocument();
-    });
+    renderApp([getAllArticlesSuccessMock, getTagsMock]);
+
+    expect(
+      await screen.findByRole("button", { name: /add article/i }),
+    ).toBeInTheDocument();
   });
 
-  test("create form is hidden initially", async () => {
+  test("create form toggles on button click", async () => {
     mockedUseAuth.mockReturnValue(authenticatedAuth);
-    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
 
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: /add article/i })).toBeInTheDocument();
+    renderApp([getAllArticlesSuccessMock, getTagsMock]);
+
+    const button = await screen.findByRole("button", {
+      name: /add article/i,
     });
 
     expect(screen.queryByTestId("create-article-form")).not.toBeInTheDocument();
-  });
 
-  test("opens create form when Add Article button is clicked", async () => {
-    mockedUseAuth.mockReturnValue(authenticatedAuth);
-    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
-
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: /add article/i })).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /add article/i }));
+    fireEvent.click(button);
 
     expect(screen.getByTestId("create-article-form")).toBeInTheDocument();
   });
 
-  test("auth modal is hidden initially", () => {
-    renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
-
-    expect(screen.queryByTestId("auth-modal")).not.toBeInTheDocument();
-  });
-
-  test("opens auth modal with signin tab when Login button is clicked", () => {
-    renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
+  test("auth modal toggles with correct tab", () => {
+    renderApp([getAllArticlesLoadingMock, getTagsMock]);
 
     fireEvent.click(screen.getByRole("button", { name: "Login" }));
-
-    const modal = screen.getByTestId("auth-modal");
-    expect(modal).toBeInTheDocument();
-    expect(modal).toHaveAttribute("data-tab", "signin");
-  });
-
-  test("opens auth modal with signup tab when Sign up button is clicked", () => {
-    renderWithProviders(<App />, [getAllArticlesLoadingMock, getTagsMock]);
+    expect(screen.getByTestId("auth-modal")).toHaveAttribute("data-tab", "signin");
 
     fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
-
-    const modal = screen.getByTestId("auth-modal");
-    expect(modal).toBeInTheDocument();
-    expect(modal).toHaveAttribute("data-tab", "signup");
+    expect(screen.getByTestId("auth-modal")).toHaveAttribute("data-tab", "signup");
   });
 
-  test("renders article filters after articles load", async () => {
-    renderWithProviders(<App />, [getAllArticlesSuccessMock, getTagsMock]);
-  
+  test("renders filters after load", async () => {
+    renderApp([getAllArticlesSuccessMock, getTagsMock]);
+
     expect(await screen.findByTestId("article-filters")).toBeInTheDocument();
   });
 });

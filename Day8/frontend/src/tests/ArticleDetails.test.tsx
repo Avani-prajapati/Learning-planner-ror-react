@@ -12,24 +12,29 @@ import {
   MockVideoPlayer,
   MockAddCommentForm,
   MockCommentCard,
-} from "../__mocks__/compoentMocks";
+} from "../__mocks__/componentMocks";
 import {
   getArticleErrorMock,
   getArticleLoadingMock,
   getArticleSuccessMock,
   getArticleWithCommentsMock,
 } from "../__mocks__/apolloMocks";
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 
 jest.mock("../contexts/ArticleContext", () => ({ useArticle: jest.fn() }));
 jest.mock("../contexts/AuthContext", () => ({ useAuth: jest.fn() }));
+
 jest.mock(
   "../components/VideoPlayer",
   () =>
     ({ src }: { src: string }) =>
       MockVideoPlayer({ src }),
 );
-jest.mock("../components/CreateCommentForm", () => () => MockAddCommentForm());
+
+jest.mock("../components/CreateCommentForm", () => () =>
+  MockAddCommentForm(),
+);
+
 jest.mock(
   "../components/CommentCard",
   () =>
@@ -40,13 +45,25 @@ jest.mock(
 const mockedUseArticle = useArticle as jest.Mock;
 const mockedUseAuth = useAuth as jest.Mock;
 
-describe("ArticleDetail", () => {
-  beforeEach(() => {
-    mockedUseAuth.mockReturnValue(mockAuthContextGuest);
-    mockedUseArticle.mockReset();
-  });
+const openArticle = (id = "1", closeFn = jest.fn()) => {
+  mockedUseArticle.mockReturnValue(mockArticleContextOpen(id, closeFn));
+  return closeFn;
+};
 
-  test("renders nothing when detail panel is closed", () => {
+const renderArticle = (apolloMock: any) => {
+  return renderWithProviders(<ArticleDetail />, [apolloMock]);
+};
+
+const ARTICLE_ID_TEXT = "1";
+const ARTICLE_ID_VIDEO = "2";
+
+beforeEach(() => {
+  mockedUseAuth.mockReturnValue(mockAuthContextGuest);
+  mockedUseArticle.mockReset();
+});
+
+describe("ArticleDetail", () => {
+  test("renders nothing when panel is closed", () => {
     mockedUseArticle.mockReturnValue(mockArticleContextClosed);
 
     const { container } = renderWithProviders(<ArticleDetail />);
@@ -54,134 +71,117 @@ describe("ArticleDetail", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  test("shows loading spinner while article is being fetched", () => {
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+  test("shows loading state", () => {
+    openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleLoadingMock("1")]);
+    renderArticle(getArticleLoadingMock(ARTICLE_ID_TEXT));
 
     expect(screen.getByText("Loading...")).toBeInTheDocument();
   });
 
-  test("shows error message when article query fails", async () => {
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+  test("shows error state", async () => {
+    openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleErrorMock("1")]);
+    renderArticle(getArticleErrorMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("Error: Failed to fetch article"),
-      ).toBeInTheDocument();
-    });
+    expect(
+      await screen.findByText("Error: Failed to fetch article"),
+    ).toBeInTheDocument();
   });
 
-  test("renders article title and id badge after successful fetch", async () => {
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+  test("renders article title and badge", async () => {
+    openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+    renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(screen.getByText("Test Article")).toBeInTheDocument();
-      expect(screen.getByText("Article #1")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("Test Article")).toBeInTheDocument();
+    expect(screen.getByText("Article #1")).toBeInTheDocument();
   });
 
-  test("renders article body text for text type articles", async () => {
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+  test("renders text article content", async () => {
+    openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+    renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(screen.getByText("This is the article body.")).toBeInTheDocument();
-      expect(screen.queryByTestId("video-player")).not.toBeInTheDocument();
-    });
+    expect(
+      await screen.findByText("This is the article body."),
+    ).toBeInTheDocument();
+
+    expect(screen.queryByTestId("video-player")).not.toBeInTheDocument();
   });
 
-  test("renders VideoPlayer with correct src for video type articles", async () => {
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("2"));
+  test("renders video player for video articles", async () => {
+    openArticle(ARTICLE_ID_VIDEO);
 
-    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("2")]);
+    renderArticle(getArticleSuccessMock(ARTICLE_ID_VIDEO));
 
-    await waitFor(() => {
-      const player = screen.getByTestId("video-player");
-      expect(player).toBeInTheDocument();
-      expect(player).toHaveAttribute(
-        "data-src",
-        "https://cdn.example.com/video.mp4",
-      );
-    });
+    const player = await screen.findByTestId("video-player");
+
+    expect(player).toHaveAttribute(
+      "data-src",
+      "https://cdn.example.com/video.mp4",
+    );
   });
 
-  test("shows no comments message when article has no comments", async () => {
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+  test("shows empty comments state", async () => {
+    openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+    renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(screen.getByText("No comments yet.")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("No comments yet.")).toBeInTheDocument();
   });
 
-  test("renders a CommentCard for each comment in the article", async () => {
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+  test("renders comments list", async () => {
+    openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleWithCommentsMock("1")]);
+    renderArticle(getArticleWithCommentsMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(screen.getAllByTestId("comment-card")).toHaveLength(2);
-      expect(screen.getByText("First comment")).toBeInTheDocument();
-      expect(screen.getByText("Second comment")).toBeInTheDocument();
-    });
+    const comments = await screen.findAllByTestId("comment-card");
+
+    expect(comments).toHaveLength(2);
+    expect(screen.getByText("First comment")).toBeInTheDocument();
+    expect(screen.getByText("Second comment")).toBeInTheDocument();
   });
 
-  test("does not render AddCommentForm when user is not authenticated", async () => {
+  test("hides comment form for guests", async () => {
     mockedUseAuth.mockReturnValue(mockAuthContextGuest);
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+    openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+    renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(screen.queryByTestId("add-comment-form")).not.toBeInTheDocument();
-    });
+    expect(
+      await screen.findByText("No comments yet."),
+    ).toBeInTheDocument();
+
+    expect(screen.queryByTestId("add-comment-form")).not.toBeInTheDocument();
   });
 
-  test("renders AddCommentForm when user is authenticated", async () => {
+  test("shows comment form for authenticated users", async () => {
     mockedUseAuth.mockReturnValue(mockAuthContextAuthenticated);
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1"));
+    openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+    renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(screen.getByTestId("add-comment-form")).toBeInTheDocument();
-    });
+    expect(await screen.findByTestId("add-comment-form")).toBeInTheDocument();
   });
 
-  test("calls closeDetail when the Close button is clicked", async () => {
-    const closeDetail = jest.fn();
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1", closeDetail));
+  test("calls closeDetail on Close button click", async () => {
+    const closeFn = openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+    renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
-    });
+    fireEvent.click(await screen.findByRole("button", { name: "Close" }));
 
-    fireEvent.click(screen.getByRole("button", { name: "Close" }));
-
-    expect(closeDetail).toHaveBeenCalledTimes(1);
+    expect(closeFn).toHaveBeenCalledTimes(1);
   });
 
-  test("calls closeDetail when the backdrop overlay is clicked", async () => {
-    const closeDetail = jest.fn();
-    mockedUseArticle.mockReturnValue(mockArticleContextOpen("1", closeDetail));
+  test("calls closeDetail on backdrop click", async () => {
+    const closeFn = openArticle(ARTICLE_ID_TEXT);
 
-    renderWithProviders(<ArticleDetail />, [getArticleSuccessMock("1")]);
+    renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    await waitFor(() => {
-      expect(screen.getByText("Article Details")).toBeInTheDocument();
-    });
+    fireEvent.click(await screen.findByTestId("backdrop"));
 
-    fireEvent.click(screen.getByTestId("backdrop"));
-
-    expect(closeDetail).toHaveBeenCalledTimes(1);
+    expect(closeFn).toHaveBeenCalledTimes(1);
   });
 });
