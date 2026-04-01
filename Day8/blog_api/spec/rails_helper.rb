@@ -63,12 +63,14 @@ RSpec.configure do |config|
 
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
-  config.define_derived_metadata(file_path: %r{/spec/graphql/resolver/}) do |metadata|
-    metadata[:type] = :resolver
-  end
-  RSpec::GraphQLResponse.configure do |c|
-    c.graphql_schema = BlogApiSchema  # Your schema class name
-  end
+  config.include FactoryBot::Syntax::Methods
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
 end
