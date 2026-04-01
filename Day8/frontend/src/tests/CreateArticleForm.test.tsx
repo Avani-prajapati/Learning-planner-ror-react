@@ -1,4 +1,3 @@
-import React from "react";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import CreateArticleForm from "../components/CreateArticleForm";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
@@ -11,16 +10,7 @@ import {
 
 jest.mock("../components/ui/Modal", () => ({
   __esModule: true,
-  Modal: ({
-    isOpen,
-    children,
-    title,
-  }: {
-    isOpen: boolean;
-    children: React.ReactNode;
-    title: string;
-    onClose: () => void;
-  }) =>
+  Modal: ({ isOpen, children, title }: any) =>
     isOpen ? (
       <div>
         <h2>{title}</h2>
@@ -29,27 +19,50 @@ jest.mock("../components/ui/Modal", () => ({
     ) : null,
 }));
 
+// ✅ constants
+const DEFAULT_TITLE = "Test Article";
+const DEFAULT_BODY = "Test body";
+
+const defaultVariables = {
+  title: DEFAULT_TITLE,
+  body: DEFAULT_BODY,
+  status: "public",
+  articleType: "text",
+  tagIds: [],
+  video: null,
+};
+
+const renderForm = (mocks: any[] = [], props = {}) => {
+  return renderWithProviders(
+    <CreateArticleForm isOpen={true} onClose={jest.fn()} {...props} />,
+    [tagsQueryMock, ...mocks],
+  );
+};
+
+const fillForm = async () => {
+  fireEvent.change(
+    await screen.findByPlaceholderText("Enter Article title..."),
+    { target: { value: DEFAULT_TITLE } },
+  );
+
+  fireEvent.change(
+    screen.getByPlaceholderText("Write your Article content..."),
+    { target: { value: DEFAULT_BODY } },
+  );
+};
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("CreateArticleForm", () => {
-  const defaultProps = {
-    isOpen: true,
-    onClose: jest.fn(),
-  };
+  test("renders form when modal is open", async () => {
+    renderForm();
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test("renders form with title when modal is open", async () => {
-    renderWithProviders(<CreateArticleForm {...defaultProps} />, [
-      tagsQueryMock,
-    ]);
-
-    await waitFor(() => {
-      expect(screen.getByText("Create New Article")).toBeInTheDocument();
-      expect(
-        screen.getByPlaceholderText("Enter Article title..."),
-      ).toBeInTheDocument();
-    });
+    expect(await screen.findByText("Create New Article")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Enter Article title..."),
+    ).toBeInTheDocument();
   });
 
   test("renders nothing when modal is closed", () => {
@@ -59,165 +72,83 @@ describe("CreateArticleForm", () => {
     );
 
     expect(screen.queryByText("Create New Article")).not.toBeInTheDocument();
+  });
+
+  test("loads and displays tags", async () => {
+    renderForm();
+
+    const addTagBtn = await screen.findByRole("button", {
+      name: /add tag/i,
+    });
+
+    fireEvent.click(addTagBtn);
+
+    expect(await screen.findByText("React")).toBeInTheDocument();
+    expect(screen.getByText("GraphQL")).toBeInTheDocument();
+    expect(screen.getByText("TypeScript")).toBeInTheDocument();
+  });
+
+  test("shows text input by default", async () => {
+    renderForm();
+
     expect(
-      screen.queryByPlaceholderText("Enter Article title..."),
+      await screen.findByPlaceholderText("Write your Article content..."),
+    ).toBeInTheDocument();
+
+    expect(screen.queryByLabelText(/video file/i)).not.toBeInTheDocument();
+  });
+
+  test("switches to video input when selected", async () => {
+    renderForm();
+
+    fireEvent.click(await screen.findByRole("button", { name: /video/i }));
+
+    expect(await screen.findByText("Video File")).toBeInTheDocument();
+    expect(
+      screen.queryByPlaceholderText("Write your Article content..."),
     ).not.toBeInTheDocument();
   });
 
-  test("loads and displays available tags in the dropdown", async () => {
-    renderWithProviders(<CreateArticleForm {...defaultProps} />, [
-      tagsQueryMock,
-    ]);
-
-    const addTagButton = await screen.findByRole("button", {
-      name: /add tag/i,
-    });
-    expect(addTagButton).toBeInTheDocument();
-
-    fireEvent.click(addTagButton);
-
-    await waitFor(() => {
-      expect(screen.getByText("React")).toBeInTheDocument();
-      expect(screen.getByText("GraphQL")).toBeInTheDocument();
-      expect(screen.getByText("TypeScript")).toBeInTheDocument();
-    });
-  });
-
-  test("shows body textarea by default for text article type", async () => {
-    renderWithProviders(<CreateArticleForm {...defaultProps} />, [
-      tagsQueryMock,
-    ]);
-
-    await waitFor(() => {
-      expect(
-        screen.getByPlaceholderText("Write your Article content..."),
-      ).toBeInTheDocument();
-      expect(screen.queryByLabelText(/video file/i)).not.toBeInTheDocument();
-    });
-  });
-
-  test("shows video file input when video article type is selected", async () => {
-    renderWithProviders(<CreateArticleForm {...defaultProps} />, [
-      tagsQueryMock,
-    ]);
-
-    const videoButton = await screen.findByRole("button", { name: /video/i });
-    fireEvent.click(videoButton);
-
-    await waitFor(() => {
-      expect(screen.getByText("Video File")).toBeInTheDocument();
-      expect(
-        screen.queryByPlaceholderText("Write your Article content..."),
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  test("calls mutation and closes modal on successful article creation", async () => {
+  test("submits successfully and closes modal", async () => {
     const onClose = jest.fn();
-    const variables = {
-      title: "Test Article",
-      body: "Test body",
-      status: "public",
-      articleType: "text",
-      tagIds: [],
-      video: null,
-    };
-
-    renderWithProviders(<CreateArticleForm isOpen={true} onClose={onClose} />, [
-      tagsQueryMock,
-      createArticleSuccessMock(variables),
-    ]);
-
-    fireEvent.change(
-      await screen.findByPlaceholderText("Enter Article title..."),
-      { target: { value: "Test Article" } },
-    );
-
-    fireEvent.change(
-      screen.getByPlaceholderText("Write your Article content..."),
-      { target: { value: "Test body" } },
-    );
-
+  
+    renderForm([createArticleSuccessMock(defaultVariables)], { onClose });
+  
+    await fillForm();
+  
     fireEvent.click(screen.getByRole("button", { name: /create article/i }));
-
+  
     await waitFor(() => {
       expect(onClose).toHaveBeenCalledTimes(1);
     });
   });
 
-  test("displays server error message when mutation returns errors", async () => {
-    const variables = {
-      title: "Test Article",
-      body: "Test body",
-      status: "public",
-      articleType: "text",
-      tagIds: [],
-      video: null,
-    };
+  test("shows server validation error", async () => {
+    renderForm([createArticleErrorMock(defaultVariables)]);
 
-    renderWithProviders(<CreateArticleForm {...defaultProps} />, [
-      tagsQueryMock,
-      createArticleErrorMock(variables),
-    ]);
-
-    fireEvent.change(
-      await screen.findByPlaceholderText("Enter Article title..."),
-      { target: { value: "Test Article" } },
-    );
-
-    fireEvent.change(
-      screen.getByPlaceholderText("Write your Article content..."),
-      { target: { value: "Test body" } },
-    );
+    await fillForm();
 
     fireEvent.click(screen.getByRole("button", { name: /create article/i }));
 
-    await waitFor(() => {
-      expect(screen.getByText("Title can't be blank")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("Title can't be blank")).toBeInTheDocument();
   });
 
-  test("displays network error message when mutation fails with network error", async () => {
-    const variables = {
-      title: "Test Article",
-      body: "Test body",
-      status: "public",
-      articleType: "text",
-      tagIds: [],
-      video: null,
-    };
+  test("shows network error", async () => {
+    renderForm([createArticleNetworkErrorMock(defaultVariables)]);
 
-    renderWithProviders(<CreateArticleForm {...defaultProps} />, [
-      tagsQueryMock,
-      createArticleNetworkErrorMock(variables),
-    ]);
-
-    fireEvent.change(
-      await screen.findByPlaceholderText("Enter Article title..."),
-      { target: { value: "Test Article" } },
-    );
-
-    fireEvent.change(
-      screen.getByPlaceholderText("Write your Article content..."),
-      { target: { value: "Test body" } },
-    );
+    await fillForm();
 
     fireEvent.click(screen.getByRole("button", { name: /create article/i }));
 
-    await waitFor(() => {
-      expect(screen.getByText("Network error")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("Network error")).toBeInTheDocument();
   });
 
-  test("calls onClose when cancel button is clicked without submitting", async () => {
+  test("calls onClose when cancel is clicked", async () => {
     const onClose = jest.fn();
 
-    renderWithProviders(<CreateArticleForm isOpen={true} onClose={onClose} />, [
-      tagsQueryMock,
-    ]);
+    renderForm([], { onClose });
 
-    const cancelButton = await screen.findByRole("button", { name: /cancel/i });
-    fireEvent.click(cancelButton);
+    fireEvent.click(await screen.findByRole("button", { name: /cancel/i }));
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
