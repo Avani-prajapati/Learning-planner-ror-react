@@ -3,8 +3,8 @@ class Article < ApplicationRecord
 
   after_commit :notify_users, on: :create
 
-  has_many :comments, dependent: :destroy
   belongs_to :user
+  has_many :comments, dependent: :destroy
   has_many :article_tags, dependent: :destroy
   has_many :tags, through: :article_tags
   # has_and_belongs_to_many :tags

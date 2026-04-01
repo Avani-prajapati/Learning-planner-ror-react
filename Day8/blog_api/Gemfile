@@ -67,6 +67,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "rspec-graphql_response"
+  gem "shoulda-matchers"
 end
 
 gem "graphql"
