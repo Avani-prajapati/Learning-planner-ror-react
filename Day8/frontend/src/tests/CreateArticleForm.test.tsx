@@ -19,7 +19,6 @@ jest.mock("../components/ui/Modal", () => ({
     ) : null,
 }));
 
-// ✅ constants
 const DEFAULT_TITLE = "Test Article";
 const DEFAULT_BODY = "Test body";
 
