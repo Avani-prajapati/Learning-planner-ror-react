@@ -9,3 +9,9 @@ if (typeof global.structuredClone !== "function") {
     return JSON.parse(JSON.stringify(value));
   };
 }
+
+global.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};

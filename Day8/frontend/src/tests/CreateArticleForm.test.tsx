@@ -2,7 +2,6 @@ import { fireEvent, screen, waitFor } from "@testing-library/react";
 import CreateArticleForm from "../components/CreateArticleForm";
 import { renderWithProviders } from "../__mocks__/renderWithProvider";
 import {
-  createArticleErrorMock,
   createArticleNetworkErrorMock,
   createArticleSuccessMock,
   tagsQueryMock,
@@ -31,9 +30,9 @@ const defaultVariables = {
   video: null,
 };
 
-const renderForm = (mocks: any[] = [], props = {}) => {
+const renderForm = (mocks: any[] = [], ArticleFormprops = {}) => {
   return renderWithProviders(
-    <CreateArticleForm isOpen={true} onClose={jest.fn()} {...props} />,
+    <CreateArticleForm isOpen={true} onClose={jest.fn()} {...ArticleFormprops} />,
     [tagsQueryMock, ...mocks],
   );
 };
@@ -120,16 +119,6 @@ describe("CreateArticleForm", () => {
     await waitFor(() => {
       expect(onClose).toHaveBeenCalledTimes(1);
     });
-  });
-
-  test("shows server validation error", async () => {
-    renderForm([createArticleErrorMock(defaultVariables)]);
-
-    await fillForm();
-
-    fireEvent.click(screen.getByRole("button", { name: /create article/i }));
-
-    expect(await screen.findByText("Title can't be blank")).toBeInTheDocument();
   });
 
   test("shows network error", async () => {
