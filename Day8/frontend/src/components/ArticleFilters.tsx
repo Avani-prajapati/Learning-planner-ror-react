@@ -75,7 +75,15 @@ function ArticleFilters({
           onValueChange={(e) => onTypeChange(e.value[0] || null)}
           size="sm"
           width="220px"
+          ids={{
+            content: "article-type-content", 
+            label: "article-type-label", 
+          }}
         >
+          <Select.HiddenSelect /> 
+          <Select.Label id="article-type-label" srOnly>
+            Article Type
+          </Select.Label>
           <Select.Control>
             <Select.Trigger>
               <Select.ValueText placeholder="All Types" />
@@ -85,9 +93,8 @@ function ArticleFilters({
               <Select.ClearTrigger />
             </Select.IndicatorGroup>
           </Select.Control>
-
           <Select.Positioner>
-            <Select.Content>
+            <Select.Content id="article-type-content">
               {articleTypeCollection.items.map((item) => (
                 <Select.Item key={item.value} item={item.value}>
                   {item.label}
