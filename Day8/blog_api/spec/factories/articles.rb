@@ -3,7 +3,7 @@ FactoryBot.define do
     title { "Valid Title" }
     body { "Valid body content" }
     article_type { "text" }
-    status { "public" }
+    status { "private" }
     association :user
   end
 end
