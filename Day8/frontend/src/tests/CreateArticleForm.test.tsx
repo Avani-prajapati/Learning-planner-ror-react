@@ -32,7 +32,11 @@ const defaultVariables = {
 
 const renderForm = (mocks: any[] = [], ArticleFormprops = {}) => {
   return renderWithProviders(
-    <CreateArticleForm isOpen={true} onClose={jest.fn()} {...ArticleFormprops} />,
+    <CreateArticleForm
+      isOpen={true}
+      onClose={jest.fn()}
+      {...ArticleFormprops}
+    />,
     [tagsQueryMock, ...mocks],
   );
 };
@@ -109,13 +113,13 @@ describe("CreateArticleForm", () => {
 
   test("submits successfully and closes modal", async () => {
     const onClose = jest.fn();
-  
+
     renderForm([createArticleSuccessMock(defaultVariables)], { onClose });
-  
+
     await fillForm();
-  
+
     fireEvent.click(screen.getByRole("button", { name: /create article/i }));
-  
+
     await waitFor(() => {
       expect(onClose).toHaveBeenCalledTimes(1);
     });

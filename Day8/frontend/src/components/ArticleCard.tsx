@@ -65,6 +65,15 @@ function ArticleCard({ article }: ArticleProps) {
         cursor="pointer"
         bg="white"
         borderRadius="2xl"
+        tabIndex={0}
+        role="button"
+        aria-label={`Open article ${article.title}`}
+        onKeyDown={(e: React.KeyboardEvent) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectArticle(article);
+          }
+        }}
         borderWidth="1px"
         borderColor="gray.200"
         transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
