@@ -132,11 +132,11 @@ function ArticleCard({ article }: ArticleProps) {
             ) : article.videoUrl ? (
               <Link
                 onClick={handleVideoLinkClick}
-                color="blue.500"
+                color="blue.800"
                 fontSize="sm"
                 fontWeight="medium"
                 textDecoration="underline"
-                _hover={{ color: "blue.600" }}
+                _hover={{ color: "blue.900" }}
               >
                 🎥 Click to view video
               </Link>
