@@ -31,9 +31,7 @@ jest.mock(
       MockVideoPlayer({ src }),
 );
 
-jest.mock("../components/CreateCommentForm", () => () =>
-  MockAddCommentForm(),
-);
+jest.mock("../components/CreateCommentForm", () => () => MockAddCommentForm());
 
 jest.mock(
   "../components/CommentCard",
@@ -60,6 +58,11 @@ const ARTICLE_ID_VIDEO = "2";
 beforeEach(() => {
   mockedUseAuth.mockReturnValue(mockAuthContextGuest);
   mockedUseArticle.mockReset();
+});
+
+beforeAll(() => {
+  HTMLDialogElement.prototype.showModal = jest.fn();
+  HTMLDialogElement.prototype.close = jest.fn();
 });
 
 describe("ArticleDetail", () => {
@@ -149,9 +152,7 @@ describe("ArticleDetail", () => {
 
     renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    expect(
-      await screen.findByText("No comments yet."),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("No comments yet.")).toBeInTheDocument();
 
     expect(screen.queryByTestId("add-comment-form")).not.toBeInTheDocument();
   });
@@ -167,11 +168,9 @@ describe("ArticleDetail", () => {
 
   test("calls closeDetail on Close button click", async () => {
     const closeFn = openArticle(ARTICLE_ID_TEXT);
-
     renderArticle(getArticleSuccessMock(ARTICLE_ID_TEXT));
 
-    fireEvent.click(await screen.findByRole("button", { name: "Close" }));
-
+    fireEvent.click(await screen.findByText("Close"));
     expect(closeFn).toHaveBeenCalledTimes(1);
   });
 

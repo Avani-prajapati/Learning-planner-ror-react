@@ -45,9 +45,7 @@ describe("CreateCommentForm", () => {
       screen.getByPlaceholderText("Write your comment..."),
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole("button", { name: /add comment/i }),
-    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: /add comment/i })).toBeDisabled();
   });
 
   test("enables submit button when input is filled", () => {
@@ -74,9 +72,7 @@ describe("CreateCommentForm", () => {
   });
 
   test("shows server error message", async () => {
-    renderForm([
-      createCommentServerErrorMock(ARTICLE_ID, COMMENT_TEXT),
-    ]);
+    renderForm([createCommentServerErrorMock(ARTICLE_ID, COMMENT_TEXT)]);
 
     typeComment();
     submitComment();
@@ -86,9 +82,7 @@ describe("CreateCommentForm", () => {
   });
 
   test("shows network error message", async () => {
-    renderForm([
-      createCommentNetworkErrorMock(ARTICLE_ID, COMMENT_TEXT),
-    ]);
+    renderForm([createCommentNetworkErrorMock(ARTICLE_ID, COMMENT_TEXT)]);
 
     typeComment();
     submitComment();

@@ -17,6 +17,7 @@ import { type Article } from "../types";
 import AddCommentForm from "./CreateCommentForm";
 import { useAuth } from "../contexts/AuthContext";
 import CommentCard from "./CommentCard";
+import { useEffect, useRef } from "react";
 
 interface GetArticleQuery {
   article: Article;
@@ -25,24 +26,46 @@ interface GetArticleQuery {
 function ArticleDetail() {
   const { selectedArticle, isDetailOpen, closeDetail } = useArticle();
   const { isAuthenticated } = useAuth();
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const { data, loading, error } = useQuery<GetArticleQuery>(GET_ARTICLE, {
     variables: { id: selectedArticle?.id },
     skip: !selectedArticle?.id,
   });
 
+  useEffect(() => {
+    if (isDetailOpen) {
+      dialogRef.current?.showModal();
+    } else {
+      dialogRef.current?.close();
+    }
+  }, [isDetailOpen]);
+
   if (!isDetailOpen) return null;
 
   return (
-    <Box
+    <dialog
+      ref={dialogRef}
+      onClose={closeDetail}
       data-testid="backdrop"
-      position="fixed"
-      inset={0}
-      bg="blackAlpha.600"
-      zIndex={50}
-      display="flex"
-      justifyContent="flex-end"
-      onClick={closeDetail}
+      onClick={(e) => {
+        if (e.target === dialogRef.current) closeDetail();
+      }}
+      style={{
+        padding: 0,
+        border: "none",
+        width: "100%",
+        height: "100vh",
+        background: "transparent",
+        margin: 0,
+        position: "fixed",
+        top: 0,
+        right: 0,
+        left: "auto",
+        overflow: "hidden",
+        maxWidth: "32rem",
+        zIndex: 50,
+      }}
     >
       <Box
         bg="white"
@@ -127,7 +150,7 @@ function ArticleDetail() {
           )}
         </Box>
       </Box>
-    </Box>
+    </dialog>
   );
 }
 

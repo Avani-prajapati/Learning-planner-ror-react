@@ -132,10 +132,16 @@ describe("App Integration", () => {
     renderApp([getAllArticlesLoadingMock, getTagsMock]);
 
     fireEvent.click(screen.getByRole("button", { name: "Login" }));
-    expect(screen.getByTestId("auth-modal")).toHaveAttribute("data-tab", "signin");
+    expect(screen.getByTestId("auth-modal")).toHaveAttribute(
+      "data-tab",
+      "signin",
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
-    expect(screen.getByTestId("auth-modal")).toHaveAttribute("data-tab", "signup");
+    expect(screen.getByTestId("auth-modal")).toHaveAttribute(
+      "data-tab",
+      "signup",
+    );
   });
 
   test("renders filters after load", async () => {
